@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
     
     FIFORequestChannel chan ("control", FIFORequestChannel::CLIENT_SIDE);
 
-    srand(time(NULL));
+    srand(time_t(NULL));
     // Start 1 Data point test 
     // sending a non-sense message 
     struct timeval s0,e0;
