@@ -123,7 +123,7 @@ int main(int argc, char *argv[]){
     // offset = 0, length = 0
     filemsg *f0 = new filemsg(0,0);
     string fNameReq = "1.csv";
-    string fNameOut = "x1.csv";
+    string fNameOut = "x2.csv";
     int req = sizeof(filemsg) + fNameReq.size() + 1;
     char *buf = new char[req];
     memcpy(buf, f0, sizeof(filemsg));
