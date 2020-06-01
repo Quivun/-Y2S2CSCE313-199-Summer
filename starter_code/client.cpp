@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
             cout << "No input" << endl;
         }
     }
-    cout <<"This is a person" <<  person << endl;
+    cout <<"This is a person : " <<  person << endl;
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
@@ -93,10 +93,12 @@ int main(int argc, char *argv[]){
     delete nonSMsg;
     gettimeofday(&e0,NULL);
     cout << endl << "Single point complete" << endl;
+    cout << "Time for Single point :  " << (e0.tv_sec - s0.tv_sec)*1e6 + (e0.tv_usec -s0.tv_usec)*1e-6 << "sec" << endl;
+    
     // Stop 1 Data point test
     
     // Start 1000 Data point test
-
+    /* On hold but it works
     struct timeval s1,e1;
     gettimeofday(&s1, NULL);
     ofstream mF;
@@ -118,7 +120,9 @@ int main(int argc, char *argv[]){
     }
     mF.close();
     gettimeofday(&e1,NULL);
-    cout << "1000 Data point complete" << endl;
+    */
+    cout << "Multiple Data point retrieval complete" << endl;
+    // cout << "Time for Multiple Data point point retrieval :  " << (e1.tv_sec - s1.tv_sec)*1e6 + (e1.tv_usec -s1.tv_usec)*1e-6 << "sec" << endl;
 
     // Stop 1000 Data point test
     // Start File Retrieval test
@@ -126,8 +130,7 @@ int main(int argc, char *argv[]){
     gettimeofday(&s2, NULL);
     // offset = 0, length = 0
     filemsg *f0 = new filemsg(0,0);
-    string fNameReq = "1.csv";
-    string fNameOut = "x2.csv";
+    string fNameReq = fileName;
     int req = sizeof(filemsg) + fNameReq.size() + 1;
     char *buf = new char[req];
     memcpy(buf, f0, sizeof(filemsg));
@@ -137,7 +140,7 @@ int main(int argc, char *argv[]){
     __int64_t fSize;
     chan.cread(&fSize, sizeof(__int64_t));
     
-    string output_path = string("received/" + fNameOut);
+    string output_path = string("received/" + fNameReq);
     FILE *f = fopen(output_path.c_str(), "wb");
     char *receiver = new char[MAX_MESSAGE];
     while (fSize > 0 ){
@@ -154,6 +157,8 @@ int main(int argc, char *argv[]){
     delete receiver;
     gettimeofday(&e2, NULL);
     cout << "File retrieval complete" << endl;
+    cout << "Time for File retrieval :  " << (e2.tv_sec - s2.tv_sec)*1e6 + (e2.tv_usec -s2.tv_usec)*1e-6 << "sec" << endl;
+
     // Stop File Retrieval test
 
     MESSAGE_TYPE m = QUIT_MSG;
