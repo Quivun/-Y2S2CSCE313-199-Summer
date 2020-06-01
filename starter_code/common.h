@@ -60,6 +60,23 @@ public:
     }
 };
 
+// for requesting message this is deja vu lol
+class nCmsg{
+public:
+  MESSAGE_TYPE mtype;
+  nCmsg(){
+    mtype = NEWCHANNEL_MSG;
+  }
+};
+
+class qmsg{
+    public:
+    MESSAGE_TYPE mtype;
+    qmsg(){
+        mtype = QUIT_MSG;
+    }
+};
+
 void EXITONERROR(string msg);
 vector<string> split (string line, char separator);
 __int64_t get_file_size (string filename);
