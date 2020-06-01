@@ -84,6 +84,7 @@ int main(int argc, char *argv[]){
     // Start 1 Data point test 
     // Sending Non Sense message : 1 Data point retrieval
     struct timeval s0,e0;
+    cout << endl << "Start Single point" << endl;
     gettimeofday(&s0, NULL);
     datamsg *nonSMsg = new datamsg(person,time,ecgType);
     chan.cwrite( nonSMsg, sizeof(datamsg) );
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]){
     printf("Data = %lf", data);
     delete nonSMsg;
     gettimeofday(&e0,NULL);
-    cout << endl << "Single point complete" << endl;
+    cout << "Single point complete" << endl;
     cout << "Time for Single point :  " << (e0.tv_sec - s0.tv_sec)*1e6 + (e0.tv_usec -s0.tv_usec)*1e-6 << "sec" << endl;
     
     // Stop 1 Data point test
@@ -100,6 +101,7 @@ int main(int argc, char *argv[]){
     // Start 1000 Data point test
     /* On hold but it works
     struct timeval s1,e1;
+    cout << "Start Multiple Data point retrieval" << endl;
     gettimeofday(&s1, NULL);
     ofstream mF;
     mF.open("received/x1.csv");
@@ -127,6 +129,7 @@ int main(int argc, char *argv[]){
     // Stop 1000 Data point test
     // Start File Retrieval test
     struct timeval s2,e2;
+    cout << "Start File Retrieval" << endl;
     gettimeofday(&s2, NULL);
     // offset = 0, length = 0
     filemsg *f0 = new filemsg(0,0);
@@ -161,7 +164,35 @@ int main(int argc, char *argv[]){
 
     // Stop File Retrieval test
 
-    MESSAGE_TYPE m = QUIT_MSG;
-    chan.cwrite(&m, sizeof(MESSAGE_TYPE));
+    if (newChannel){
+        nCmsg newC = nCmsg();
+        cout << "Opening new channel" << endl;
+        chan.cwrite((char*)&newC, sizeof(nCmsg));
+        FIFORequestChannel nC ("user", FIFORequestChannel::CLIENT_SIDE);
+        datamsg test1 = new datamsg(2,0.004,2);
+        nC.cwrite(&test1,sizeof(test1));
+        double testD1 = 0;
+        nC.cread((char*)&testD1, sizeof(double));
+        datamsg test2 = new datamsg(2,0.008,2);
+        nC.cwrite(&test2,sizeof(test2));
+        double testD2 = 0;
+        nC.cread((char*)&testD2, sizeof(double));
+        datamsg test3 = new datamsg(2,0.012,2);
+        nC.cwrite(&test3,sizeof(test3));
+        double testD3 = 0;
+        nC.cread((char*)&testD3, sizeof(double));
+        cout << "Tested Data points recieved : " << endl;
+        cout << testD1 << endl;
+        cout << testD2 << endl;
+        cout << testD3 << endl;
+        MESSAGE_TYPE nCQuit = QUIT_MSG;
+        cout << "Closing new channel" << endl;
+        newchan.cwrite(&nCQuit, sizeof(MESSAGE_TYPE));
+        wait(NULL);
+    }
+
+    MESSAGE_TYPE cQuit = QUIT_MSG;
+    chan.cwrite(&cQuit, sizeof(MESSAGE_TYPE));
+    wait(NULL);
 
 }
