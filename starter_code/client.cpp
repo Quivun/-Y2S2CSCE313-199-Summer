@@ -112,7 +112,7 @@ int main(int argc, char *argv[]){
         fwrite(receiver, 1, req_len, f);
         ((filemsg *)buf)->offset += req_len;
         fSize -= req_len;
-        reqAmt--;
+        cout << reqAmt-- << endl;
     }
     fclose(f);
     delete buf;
