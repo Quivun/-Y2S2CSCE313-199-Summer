@@ -20,15 +20,13 @@ int main(int argc, char *argv[]){
       int ecgType = 0;
       string fileName = "x1.csv";
       bool newChannel = false;
-      
-    while ((opt = getopt(argc, argv, "p:t:e:f:c")) != -1)
+      int bufCap = MAX_MESSAGE;
+    while ((opt = getopt(argc, argv, "p:t:e:f:c:m")) != -1)
     {
         switch (opt)
         {
         case 'p':
             person = atoi(optarg);
-    cout <<"This is a person" <<  person << endl;
-
             break;
         case 't':
             time = stod(optarg);
@@ -42,6 +40,8 @@ int main(int argc, char *argv[]){
         case 'c':
             newChannel = true;
             break;
+        case 'm':
+            bufCap = atoi(optarg);
         case '?':
             cout << "Incorrect input" << endl;
             break;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
-        char *args[] = { "./server", NULL};
+        char *args[] = { "./server -m " + bufCap, NULL};
         execvp(args[0], args);
     } else {
         int numPat = 10;
