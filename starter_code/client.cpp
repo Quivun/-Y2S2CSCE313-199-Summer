@@ -100,12 +100,13 @@ int main(int argc, char *argv[]){
 
     ofstream mF;
     mF.open("received/x1.csv");
+    int t = 0;
     while (t < 59.996){
         datamsg ec1 = datamsg(person, t, 1);
         datamsg ec2 = datamsg(person, t, 2);
         mF << t;
         double d1 = 0;
-        chan.read((char*)&d1,sizeof(double));
+        chan.cread((char*)&d1,sizeof(double));
         mF << d1 << ",";
         chan.cwrite(&ec2,sizeof(ec2));
         double d2 = 0;
@@ -135,7 +136,7 @@ int main(int argc, char *argv[]){
     string output_path = string("received/" + fNameOut);
     FILE *f = fopen(output_path.c_str(), "wb");
     char *receiver = new char[MAX_MESSAGE];
-    while (fSize > 0 && reqAmt > 0){
+    while (fSize > 0 ){
         int req_len = min((__int64_t)MAX_MESSAGE, fSize);
         ((filemsg *)buf)->length = req_len;
         chan.cwrite(buf, req);
@@ -143,7 +144,6 @@ int main(int argc, char *argv[]){
         fwrite(receiver, 1, req_len, f);
         ((filemsg *)buf)->offset += req_len;
         fSize -= req_len;
-        cout << reqAmt-- << endl;
     }
     fclose(f);
     delete buf;
