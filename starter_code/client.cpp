@@ -46,6 +46,7 @@ int main(int argc, char *argv[]){
     // offset = 0, length = 0
     filemsg *f0 = new filemsg(0,0);
     string fNameReq = "1.csv";
+    string fNameOut = "x1.csv";
     int req = sizeof(filemsg) + fNameReq.size() + 1;
     char *buf = new char[req];
     memcpy(buf, f0, sizeof(filemsg));
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]){
     __int64_t fSize;
     chan.cread(&fSize, sizeof(__int64_t));
     
-    string output_path = string("received/" + "x1.csv");
+    string output_path = string("received/" + fNameOut);
     FILE *f = fopen(output_path.c_str(), "wb");
     char *receiver = new char[MAX_MESSAGE];
     while (fSize > 0){
