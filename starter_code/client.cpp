@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
 
         bufCap = "./server -m " + bufCap;
         char *serverEntry = new char[bufCap.size() +1];
-        copy(str.begin(),str.end(),serverEntry);
+        copy(bufCap.begin(),bufCap.end(),serverEntry);
         serverEntry[bufCap.size()] = '\0';
         char *args[] = { serverEntry, NULL};
         execvp(args[0], args);
