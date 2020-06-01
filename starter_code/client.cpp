@@ -14,6 +14,39 @@ using namespace std;
 
 
 int main(int argc, char *argv[]){
+      int opt;
+      int person = 0;
+      double time = 0;
+      int ecg = 0;
+      string fileName = "x1.csv";
+      bool newC = false;
+      
+    while ((opt = getopt(argc, argv, "p:t:e:f:c")) != -1)
+    {
+        switch (opt)
+        {
+        case 'p':
+            person = atoi(optarg);
+            break;
+        case 't':
+            time = stod(optarg);
+            break;
+        case 'e':
+            ecgType = atoi(optarg);
+            break;
+        case 'f':
+            fileName = optarg;
+            break;
+        case 'c':
+            newChannel = true;
+            break;
+        case '?':
+            cout << "Incorrect input" << endl;
+            break;
+        default:
+            cout << "No input" << endl;
+        }
+    }
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
@@ -22,8 +55,8 @@ int main(int argc, char *argv[]){
     } else {
         int numPat = 10;
         int numReq = 100;
-
     }
+    
     FIFORequestChannel chan ("control", FIFORequestChannel::CLIENT_SIDE);
 
     srand(time(NULL));
@@ -59,7 +92,8 @@ int main(int argc, char *argv[]){
     string output_path = string("received/" + fNameOut);
     FILE *f = fopen(output_path.c_str(), "wb");
     char *receiver = new char[MAX_MESSAGE];
-    while (fSize > 0){
+    int reqAmt = 1000;
+    while (fSize > 0 && reqAmt > 0){
         int req_len = min((__int64_t)MAX_MESSAGE, fSize);
         ((filemsg *)buf)->length = req_len;
         chan.cwrite(buf, req);
@@ -67,6 +101,7 @@ int main(int argc, char *argv[]){
         fwrite(receiver, 1, req_len, f);
         ((filemsg *)buf)->offset += req_len;
         fSize -= req_len;
+        reqAmt--;
     }
     fclose(f);
     delete buf;
