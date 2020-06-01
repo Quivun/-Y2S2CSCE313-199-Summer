@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char *argv[]){
       int opt;
-      int person = 0;
+      int person = 1;
       double time = 0;
       int ecgType = 0;
       string fileName = "x1.csv";
@@ -99,22 +99,22 @@ int main(int argc, char *argv[]){
 
     struct timeval s1,e1;
     gettimeofday(&s1, NULL);
-    ofstream myfile;
-    myfile.open("received/x1.csv");
-    double i = 0;
-    while (i < 59.996){
-        myfile << i << ",";
-        datamsg d1 = datamsg(patient, i, 1);
-        datamsg d2 = datamsg(patient, i, 2);
-        chan.cwrite(&d1,sizeof(d1));
-        double data1;
-        chan.cread((char*)&data1,sizeof(double));
-        myfile << data1 << ",";
-        chan.cwrite(&d2,sizeof(d2));
-        double data2;
-        chan.cread((char*)&data2,sizeof(double));
-        myfile << data2 << endl;
-        i = i + 0.004;
+    ofstream mF;
+    mF.open("received/x1.csv");
+    double t = 0;
+    while (t < 59.996){
+        mF << t << ",";
+        datamsg ec1 = datamsg(person, t, 1);
+        datamsg ec2 = datamsg(person, t, 2);
+        chan.cwrite(&ec1,sizeof(ec1));
+        double d1 = 0;
+        chan.cread((char*)&d1,sizeof(double));
+        mF << d1 << ",";
+        chan.cwrite(&ec2,sizeof(ec2));
+        double d2 = 0;
+        chan.cread((char*)&d2, sizeof(double));
+        mF << d2 << endl;
+        t += 0.004;
     }
     mF.close();
     gettimeofday(&e1,NULL);
