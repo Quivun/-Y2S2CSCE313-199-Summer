@@ -17,9 +17,9 @@ int main(int argc, char *argv[]){
       int opt;
       int person = 0;
       double time = 0;
-      int ecg = 0;
+      int ecgType = 0;
       string fileName = "x1.csv";
-      bool newC = false;
+      bool newChannel = false;
       
     while ((opt = getopt(argc, argv, "p:t:e:f:c")) != -1)
     {
