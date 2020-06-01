@@ -93,11 +93,13 @@ int main(int argc, char *argv[]){
     printf("Data = %lf", data);
     delete nonSMsg;
     gettimeofday(&e0,NULL);
+    cout << "Single point complete" << endl;
     // Stop 1 Data point test
     
     // Start 1000 Data point test
 
-
+    struct timeval s1,e1;
+    gettimeofday(&s1, NULL);
     ofstream mF;
     mF.open("received/x1.csv");
     int t = 0;
@@ -115,7 +117,9 @@ int main(int argc, char *argv[]){
         t += 0.004;
     }
     mF.close();
-    
+    gettimeofday(&e1,NULL);
+    cout << "1000 Data point complete" << endl;
+
     // Stop 1000 Data point test
     // Start File Retrieval test
     struct timeval s2,e2;
@@ -149,6 +153,7 @@ int main(int argc, char *argv[]){
     delete buf;
     delete receiver;
     gettimeofday(&e2, NULL);
+    cout << "File retrieval complete" << endl;
     // Stop File Retrieval test
 
     MESSAGE_TYPE m = QUIT_MSG;
