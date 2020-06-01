@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
       double time = 0;
       int ecgType = 0;
       string fileName = "x1.csv";
-      bool newChannel = false;
+      bool newChannel = true;
       string bufCap = to_string(MAX_MESSAGE);
     while ((opt = getopt(argc, argv, "p:t:e:f:c:m")) != -1)
     {
@@ -187,7 +187,7 @@ int main(int argc, char *argv[]){
         cout << testD3 << endl;
         MESSAGE_TYPE nCQuit = QUIT_MSG;
         cout << "Closing new channel" << endl;
-        newchan.cwrite(&nCQuit, sizeof(MESSAGE_TYPE));
+        nC.cwrite(&nCQuit, sizeof(MESSAGE_TYPE));
         wait(NULL);
     }
 
