@@ -1,8 +1,8 @@
 /*
-    Tanzir Ahmed
-    Department of Computer Science & Engineering
+    Joshua Chong
+    CS Undergraduate
     Texas A&M University
-    Date  : 2/8/20
+    Date  : 5/31/20
  */
 #include "common.h"
 #include "FIFOreqchannel.h"
