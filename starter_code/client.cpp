@@ -74,4 +74,7 @@ int main(int argc, char *argv[]){
     gettimeofday(&e1, NULL);
     // Stop Data Retrieval test
 
+    MESSAGE_TYPE m = QUIT_MSG;
+    chan.cwrite(&m, sizeof(MESSAGE_TYPE));
+
 }
