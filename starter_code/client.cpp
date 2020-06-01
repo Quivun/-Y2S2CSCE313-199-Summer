@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
             cout << "No input" << endl;
         }
     }
-    cout << person << endl;
+    cout <<"This is a person" <<  person << endl;
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
