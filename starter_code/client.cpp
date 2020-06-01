@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
       int person = 1;
       double time = 0;
       int ecgType = 0;
-      string fileName = "x1.csv";
+      string fileName = "1.csv";
       bool newChannel = true;
       string bufCap = to_string(MAX_MESSAGE);
     while ((opt = getopt(argc, argv, "p:t:e:f:c:m")) != -1)
@@ -169,21 +169,26 @@ int main(int argc, char *argv[]){
         cout << "Opening new channel" << endl;
         chan.cwrite((char*)&newC, sizeof(nCmsg));
         FIFORequestChannel nC ("user", FIFORequestChannel::CLIENT_SIDE);
+        cout << "Tested Data points recieved : " << endl;
+        cout << "Pass 1" << endl;
         datamsg test1 = datamsg(2,0.004,2);
+        cout << "Pass 2" << endl;
         nC.cwrite(&test1,sizeof(test1));
+        cout << "Pass 3" << endl;
         double testD1 = 0;
+        cout << "Pass 4" << endl;
         nC.cread((char*)&testD1, sizeof(double));
+        cout << testD1 << endl;
+        cout << "Pass 5" << endl;
         datamsg test2 = datamsg(2,0.008,2);
         nC.cwrite(&test2,sizeof(test2));
         double testD2 = 0;
         nC.cread((char*)&testD2, sizeof(double));
+        cout << testD2 << endl;
         datamsg test3 = datamsg(2,0.012,2);
         nC.cwrite(&test3,sizeof(test3));
         double testD3 = 0;
         nC.cread((char*)&testD3, sizeof(double));
-        cout << "Tested Data points recieved : " << endl;
-        cout << testD1 << endl;
-        cout << testD2 << endl;
         cout << testD3 << endl;
         MESSAGE_TYPE nCQuit = QUIT_MSG;
         cout << "Closing new channel" << endl;
