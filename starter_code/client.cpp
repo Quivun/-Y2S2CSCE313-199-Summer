@@ -53,12 +53,15 @@ int main(int argc, char *argv[]){
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
-
+        /*
         bufCap = "./server -m " + bufCap;
         char *serverEntry = new char[bufCap.size() +1];
         copy(bufCap.begin(),bufCap.end(),serverEntry);
         serverEntry[bufCap.size()] = '\0';
+        
         char *args[] = { serverEntry, NULL};
+        */
+       char *args[] = {"./server", NULL};
         execvp(args[0], args);
     } else {
         int numPat = 10;
