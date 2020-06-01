@@ -27,6 +27,8 @@ int main(int argc, char *argv[]){
         {
         case 'p':
             person = atoi(optarg);
+    cout <<"This is a person" <<  person << endl;
+
             break;
         case 't':
             time = stod(optarg);
