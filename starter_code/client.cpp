@@ -168,6 +168,7 @@ int main(int argc, char *argv[]){
         nCmsg newC = nCmsg();
         cout << "Opening new channel" << endl;
         chan.cwrite((char*)&newC, sizeof(nCmsg));
+        cout << "Passes this too" << endl;
         FIFORequestChannel nC ("user", FIFORequestChannel::CLIENT_SIDE);
         cout << "Tested Data points recieved : " << endl;
         cout << "Pass 1" << endl;
