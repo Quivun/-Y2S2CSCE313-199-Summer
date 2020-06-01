@@ -9,6 +9,7 @@
 #include "common.h"
 #include "FIFOreqchannel.h"
 #include <cstring>
+#include <sys/wait.h> 
 using namespace std;
 
 
@@ -202,8 +203,8 @@ int main(int argc, char *argv[]){
     }
     if (cflag){
         cout << "Opening a new channel" << endl;
-        newchannelmsg newchannel = newchannelmsg();
-        chan.cwrite((char*)&newchannel, sizeof(newchannelmsg));
+        nCmsg newchannel = nCmsg();
+        chan.cwrite((char*)&newchannel, sizeof(nCmsg));
         FIFORequestChannel newchan ("data1_", FIFORequestChannel::CLIENT_SIDE);
         datamsg data = datamsg(1, 30, 2);
         newchan.cwrite(&data,sizeof(data));
