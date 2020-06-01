@@ -60,7 +60,6 @@ int main(int argc, char *argv[]){
         serverEntry[bufCap.size()] = '\0';
         char *args[] = { serverEntry, NULL};
         execvp(args[0], args);
-        delete[] serverEntry;
     } else {
         int numPat = 10;
         int numReq = 100;
