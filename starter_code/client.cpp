@@ -27,21 +27,32 @@ int main(int argc, char *argv[]){
         {
         case 'p':
             person = atoi(optarg);
+            cout << "Patient : " << person << endl;
             break;
         case 't':
             time = stod(optarg);
+            cout << "Time : " << time << endl;
+
             break;
         case 'e':
             ecgType = atoi(optarg);
+            cout << "ECG Type : " << ecgType << endl;
+
             break;
         case 'f':
             fileName = optarg;
+            cout << "Name of File : " << fileName << endl;
+
             break;
         case 'c':
             newChannel = true;
+            cout << "New Channel? : " << newChannel << endl;
+
             break;
         case 'm':
             bufCap = optarg;
+            cout << "Memory Capacity : " << bufCap << endl;
+
         case '?':
             cout << "Incorrect input" << endl;
             break;
@@ -72,10 +83,10 @@ int main(int argc, char *argv[]){
 
     srand(time_t(NULL));
     // Start 1 Data point test 
-    // sending a non-sense message 
+    // Sending Non Sense message : 1 Data point retrieval
     struct timeval s0,e0;
     gettimeofday(&s0, NULL);
-    datamsg *nonSMsg = new datamsg(1,0.004,2);
+    datamsg *nonSMsg = new datamsg(person,time,ecgType);
     chan.cwrite( nonSMsg, sizeof(datamsg) );
     double data = 0;
     chan.cread(&data, sizeof(double));
@@ -83,10 +94,31 @@ int main(int argc, char *argv[]){
     delete nonSMsg;
     gettimeofday(&e0,NULL);
     // Stop 1 Data point test
+    
+    // Start 1000 Data point test
 
-    // Start Data Retrieval test
-    struct timeval s1,e1;
-    gettimeofday(&s1, NULL);
+
+    ofstream mF;
+    mF.open("received/x1.csv");
+    while (t < 59.996){
+        datamsg ec1 = datamsg(person, t, 1);
+        datamsg ec2 = datamsg(person, t, 2);
+        mF << t;
+        double d1 = 0;
+        chan.read((char*)&d1,sizeof(double));
+        mF << d1 << ",";
+        chan.cwrite(&ec2,sizeof(ec2));
+        double d2 = 0;
+        chan.cread((char*)&d2, sizeof(double));
+        mF << d2 << endl;
+        t += 0.004;
+    }
+    mF.close();
+    
+    // Stop 1000 Data point test
+    // Start File Retrieval test
+    struct timeval s2,e2;
+    gettimeofday(&s2, NULL);
     // offset = 0, length = 0
     filemsg *f0 = new filemsg(0,0);
     string fNameReq = "1.csv";
@@ -103,7 +135,6 @@ int main(int argc, char *argv[]){
     string output_path = string("received/" + fNameOut);
     FILE *f = fopen(output_path.c_str(), "wb");
     char *receiver = new char[MAX_MESSAGE];
-    int reqAmt = 1000;
     while (fSize > 0 && reqAmt > 0){
         int req_len = min((__int64_t)MAX_MESSAGE, fSize);
         ((filemsg *)buf)->length = req_len;
@@ -117,8 +148,8 @@ int main(int argc, char *argv[]){
     fclose(f);
     delete buf;
     delete receiver;
-    gettimeofday(&e1, NULL);
-    // Stop Data Retrieval test
+    gettimeofday(&e2, NULL);
+    // Stop File Retrieval test
 
     MESSAGE_TYPE m = QUIT_MSG;
     chan.cwrite(&m, sizeof(MESSAGE_TYPE));
