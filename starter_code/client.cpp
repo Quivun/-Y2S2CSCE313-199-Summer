@@ -9,7 +9,7 @@
 
 #include<iostream>
 #include<string>
-#include<studio.h>
+#include<stdio.h>
 using namespace std;
 
 
