@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
     printf("Data = %lf", data);
     delete nonSMsg;
     gettimeofday(&e0,NULL);
-    cout << "Single point complete" << endl;
+    cout << endl << "Single point complete" << endl;
     // Stop 1 Data point test
     
     // Start 1000 Data point test
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]){
     while (t < 59.996){
         datamsg ec1 = datamsg(person, t, 1);
         datamsg ec2 = datamsg(person, t, 2);
-        mF << t;
+        mF << t << ",";
         double d1 = 0;
         chan.cread((char*)&d1,sizeof(double));
         mF << d1 << ",";
