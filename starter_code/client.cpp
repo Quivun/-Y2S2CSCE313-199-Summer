@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
     // sending a non-sense message 
     struct timeval s0,e0;
     gettimeofday(&s0, NULL);
-    datamsg *nonSMsg = new data(1,0.004,2);
+    datamsg *nonSMsg = new datamsg(1,0.004,2);
     chan.cwrite( nonSMsg, sizeof(datamsg) );
     double data = 0;
     chan.cread(&data, sizeof(double));
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
     while (fSize > 0){
         int req_len = min((__int64_t)MAX_MESSAGE, fSize);
         ((filemsg *)buf)->length = req_len;
-        chan.cwrite(buf, request);
+        chan.cwrite(buf, req);
         chan.cread(receiver, req_len);
         fwrite(receiver, 1, req_len, f);
         ((filemsg *)buf)->offset += req_len;
