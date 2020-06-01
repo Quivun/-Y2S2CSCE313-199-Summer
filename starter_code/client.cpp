@@ -169,15 +169,15 @@ int main(int argc, char *argv[]){
         cout << "Opening new channel" << endl;
         chan.cwrite((char*)&newC, sizeof(nCmsg));
         FIFORequestChannel nC ("user", FIFORequestChannel::CLIENT_SIDE);
-        datamsg test1 = new datamsg(2,0.004,2);
+        datamsg test1 = datamsg(2,0.004,2);
         nC.cwrite(&test1,sizeof(test1));
         double testD1 = 0;
         nC.cread((char*)&testD1, sizeof(double));
-        datamsg test2 = new datamsg(2,0.008,2);
+        datamsg test2 = datamsg(2,0.008,2);
         nC.cwrite(&test2,sizeof(test2));
         double testD2 = 0;
         nC.cread((char*)&testD2, sizeof(double));
-        datamsg test3 = new datamsg(2,0.012,2);
+        datamsg test3 = datamsg(2,0.012,2);
         nC.cwrite(&test3,sizeof(test3));
         double testD3 = 0;
         nC.cread((char*)&testD3, sizeof(double));
