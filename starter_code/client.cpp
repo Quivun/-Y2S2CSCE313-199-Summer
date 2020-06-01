@@ -102,7 +102,7 @@ int main(int argc, char *argv[]){
     gettimeofday(&s1, NULL);
     ofstream mF;
     mF.open("received/x1.csv");
-    int t = 0;
+    double t = 0;
     while (t < 59.996){
         datamsg ec1 = datamsg(person, t, 1);
         datamsg ec2 = datamsg(person, t, 2);
