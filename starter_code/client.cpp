@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
       int ecgType = 0;
       string fileName = "x1.csv";
       bool newChannel = false;
-      string bufCap = MAX_MESSAGE;
+      string bufCap = to_string(MAX_MESSAGE);
     while ((opt = getopt(argc, argv, "p:t:e:f:c:m")) != -1)
     {
         switch (opt)
@@ -53,7 +53,9 @@ int main(int argc, char *argv[]){
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
-        char *args[] = { string("./server -m " + bufCap).c_str(), NULL};
+        bufCap = "./server -m " + bufCap;
+        const char *serverEntry = bufCap.c_str();
+        char *args[] = { serverEntry, NULL};
         execvp(args[0], args);
     } else {
         int numPat = 10;
