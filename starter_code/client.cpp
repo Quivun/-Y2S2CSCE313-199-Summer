@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
       double time = 0;
       int ecgType = 0;
       string fileName = "1.csv";
-      bool newChannel = true;
+      bool newChannel = false;
       string bufCap = to_string(MAX_MESSAGE);
     while ((opt = getopt(argc, argv, "p:t:e:f:c:m")) != -1)
     {
@@ -74,8 +74,6 @@ int main(int argc, char *argv[]){
        char *args[] = {"./server", NULL};
         execvp(args[0], args);
     } else {
-        int numPat = 10;
-        int numReq = 100;
     }
     
     FIFORequestChannel chan ("control", FIFORequestChannel::CLIENT_SIDE);
@@ -99,7 +97,7 @@ int main(int argc, char *argv[]){
     // Stop 1 Data point test
     
     // Start 1000 Data point test
-    /* On hold but it works
+
     struct timeval s1,e1;
     cout << "Start Multiple Data point retrieval" << endl;
     gettimeofday(&s1, NULL);
@@ -122,11 +120,11 @@ int main(int argc, char *argv[]){
     }
     mF.close();
     gettimeofday(&e1,NULL);
-    */
-    cout << "Multiple Data point retrieval complete" << endl;
-    // cout << "Time for Multiple Data point point retrieval :  " << (e1.tv_sec - s1.tv_sec)*1e6 + (e1.tv_usec -s1.tv_usec)*1e-6 << "sec" << endl;
 
+    cout << "Multiple Data point retrieval complete" << endl;
+    cout << "Time for Multiple Data point point retrieval :  " << (e1.tv_sec - s1.tv_sec)*1e6 + (e1.tv_usec -s1.tv_usec)*1e-6 << "sec" << endl;
     // Stop 1000 Data point test
+
     // Start File Retrieval test
     struct timeval s2,e2;
     cout << "Start File Retrieval" << endl;
@@ -164,41 +162,34 @@ int main(int argc, char *argv[]){
 
     // Stop File Retrieval test
 
+    // Start New channel if needed
     if (newChannel){
         nCmsg newC = nCmsg();
         cout << "Opening new channel" << endl;
         chan.cwrite((char*)&newC, sizeof(nCmsg));
-        cout << "Passes this too" << endl;
-        FIFORequestChannel nC ("user", FIFORequestChannel::CLIENT_SIDE);
+        FIFORequestChannel nC ("data1_", FIFORequestChannel::CLIENT_SIDE);
         cout << "Tested Data points recieved : " << endl;
-        cout << "Pass 1" << endl;
         datamsg test1 = datamsg(2,0.004,2);
-        cout << "Pass 2" << endl;
         nC.cwrite(&test1,sizeof(test1));
-        cout << "Pass 3" << endl;
         double testD1 = 0;
-        cout << "Pass 4" << endl;
         nC.cread((char*)&testD1, sizeof(double));
-        cout << testD1 << endl;
-        cout << "Pass 5" << endl;
+        cout << "Patient 2, Time 0.004, ECG 2 : " << testD1 << endl;
         datamsg test2 = datamsg(2,0.008,2);
         nC.cwrite(&test2,sizeof(test2));
         double testD2 = 0;
         nC.cread((char*)&testD2, sizeof(double));
-        cout << testD2 << endl;
+        cout << "Patient 2, Time 0.008, ECG 2 : " << testD2 << endl;
         datamsg test3 = datamsg(2,0.012,2);
         nC.cwrite(&test3,sizeof(test3));
         double testD3 = 0;
         nC.cread((char*)&testD3, sizeof(double));
-        cout << testD3 << endl;
+        cout << "Patient 2, Time 0.012, ECG 2 : " << testD3 << endl;
         MESSAGE_TYPE nCQuit = QUIT_MSG;
         cout << "Closing new channel" << endl;
         nC.cwrite(&nCQuit, sizeof(MESSAGE_TYPE));
-        wait(NULL);
     }
 
     MESSAGE_TYPE cQuit = QUIT_MSG;
     chan.cwrite(&cQuit, sizeof(MESSAGE_TYPE));
-    wait(NULL);
 
 }
