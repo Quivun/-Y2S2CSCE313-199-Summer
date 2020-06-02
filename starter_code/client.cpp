@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
       string fileName = "1.csv";
       bool newChannel = false;
       string bufCap = to_string(MAX_MESSAGE);
-    while ((opt = getopt(argc, argv, "p:t:e:f:c:m")) != -1)
+    while ((opt = getopt(argc, argv, "p:t:e:f:cm:")) != -1)
     {
         switch (opt)
         {
@@ -59,7 +59,6 @@ int main(int argc, char *argv[]){
             cout << "No input" << endl;
         }
     }
-    cout <<"This is a person : " <<  person << endl;
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
@@ -73,7 +72,6 @@ int main(int argc, char *argv[]){
         */
        char *args[] = {"./server", NULL};
         execvp(args[0], args);
-    } else {
     }
     
     FIFORequestChannel chan ("control", FIFORequestChannel::CLIENT_SIDE);
@@ -82,13 +80,14 @@ int main(int argc, char *argv[]){
     // Start 1 Data point test 
     // Sending Non Sense message : 1 Data point retrieval
     struct timeval s0,e0;
-    cout << endl << "Start Single point" << endl;
+    cout << "Start Single point" << endl;
     gettimeofday(&s0, NULL);
     datamsg *nonSMsg = new datamsg(person,time,ecgType);
     chan.cwrite( nonSMsg, sizeof(datamsg) );
     double data = 0;
     chan.cread(&data, sizeof(double));
     printf("Data = %lf", data);
+    cout << endl;
     delete nonSMsg;
     gettimeofday(&e0,NULL);
     cout << "Single point complete" << endl;
@@ -97,12 +96,11 @@ int main(int argc, char *argv[]){
     // Stop 1 Data point test
     
     // Start 1000 Data point test
-
     struct timeval s1,e1;
     cout << "Start Multiple Data point retrieval" << endl;
     gettimeofday(&s1, NULL);
     ofstream mF;
-    mF.open("received/x1.csv");
+    mF.open("received/x1.csv", ios::binary);
     double t = 0;
     while (t < 59.996){
         mF << t << ",";
