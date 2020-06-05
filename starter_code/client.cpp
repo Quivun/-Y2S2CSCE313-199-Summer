@@ -51,26 +51,25 @@ int main(int argc, char *argv[]){
         case 'm':
             bufCap = optarg;
             cout << "Memory Capacity : " << bufCap << endl;
+            break;
 
         case '?':
             cout << "Incorrect input" << endl;
             break;
         default:
             cout << "No input" << endl;
+            break;
         }
     }
     int pid = fork();
     if (pid == 0){
         // Got points off last time I didn't auto summon rip
-        /*
-        bufCap = "./server -m " + bufCap;
+        
         char *serverEntry = new char[bufCap.size() +1];
         copy(bufCap.begin(),bufCap.end(),serverEntry);
         serverEntry[bufCap.size()] = '\0';
         
-        char *args[] = { serverEntry, NULL};
-        */
-       char *args[] = {"./server", NULL};
+        char *args[] = { "./server","m",serverEntry, NULL};
         execvp(args[0], args);
     }
     
@@ -141,9 +140,9 @@ int main(int argc, char *argv[]){
     
     string output_path = string("received/" + fNameReq);
     FILE *f = fopen(output_path.c_str(), "wb");
-    char *receiver = new char[MAX_MESSAGE];
+    char *receiver = new char[stoi(bufCap)];
     while (fSize > 0 ){
-        int req_len = min((__int64_t)MAX_MESSAGE, fSize);
+        int req_len = min((__int64_t)stoi(bufCap), fSize);
         ((filemsg *)buf)->length = req_len;
         chan.cwrite(buf, req);
         chan.cread(receiver, req_len);
