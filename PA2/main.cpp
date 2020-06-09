@@ -80,6 +80,7 @@ void shell()
                         }
                         char *args[] = {(char *)cmdList[q].c_str(), NULL};
                         execvp(args[0], args);
+                        waitpid(pid,0,0);
                     
                     }
                     else
