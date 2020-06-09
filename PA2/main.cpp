@@ -8,11 +8,6 @@
 
 using namespace std;
 
-int main()
-{
-    shell();
-    return 0;
-}
 
 void shell()
 {
@@ -62,5 +57,11 @@ void shell()
         read(fds[0], buf, 100);
         printf("PARENT:Recv %s\n", buf);
     }
+    return 0;
+}
+
+int main()
+{
+    shell();
     return 0;
 }
