@@ -14,7 +14,7 @@ vector<string> txtSplit(string inp, string divide)
 {
     vector<string> ret;
     string cur = "";
-    for (int q = 0; q < inp; q++)
+    for (int q = 0; q < inp.length(); q++)
     {
         if (divide == inp.substr(q, 1))
         {
@@ -86,7 +86,7 @@ void shell()
                     { // Parent
                         if (q == cmdList.size() - 1)
                         {
-                            waitpid(pid);
+                            waitpid(pid,0,0);
                         }
                         dup2(fd[0], 0); // now redirect the input for the next loop iteration
                         close(fd[1]);
