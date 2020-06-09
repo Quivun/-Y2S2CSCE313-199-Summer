@@ -5,6 +5,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <cstring>
+#include <string.h>
 
 using namespace std;
 
@@ -57,7 +59,6 @@ void shell()
         read(fds[0], buf, 100);
         printf("PARENT:Recv %s\n", buf);
     }
-    return 0;
 }
 
 int main()
