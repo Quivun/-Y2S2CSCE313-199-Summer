@@ -97,6 +97,7 @@ void shell()
             }
         }
     }
+}
 
     int main()
     {
