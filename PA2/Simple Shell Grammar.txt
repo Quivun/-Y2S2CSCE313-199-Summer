@@ -1,0 +1,19 @@
+valid string = unix command || unix command AMP || special command 
+
+unix command = command name ARGS || unix command REDIRECTION ﬁlename || unix command PIPE unix command 
+
+special command = cd DIRECTORY || exit
+
+command name = any valid executable/interpreted ﬁle name
+
+AMP = &
+
+ARG = string
+
+ARGS = ARG ARGS || ARG 
+
+DIRECTORY = absolute path || relative path 
+
+PIPE = | 
+
+REDIRECTION = < || >
