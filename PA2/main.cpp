@@ -2,12 +2,21 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 using namespace std;
 
 int main()
 {
+    shell();
+    return 0;
+}
+
+void shell()
+{
+    /*
     bool quit = false;
     while (!quit)
     {
@@ -23,7 +32,8 @@ int main()
         {
             int pid = fork();
             if (pid == 0)
-            { //child process
+            {   
+                //child process
                 // preparing the input command for execution
                 char *args[] = {(char *)inputline.c_str(), NULL};
                 execvp(args[0], args);
@@ -35,4 +45,22 @@ int main()
             }
         }
     }
+    */
+    char buf[10];
+    int fds[2];
+    pipe(fds);
+    if (!fork())
+    {
+        // on the child side
+        char *msg = "a test message";
+        printf("CHILD: Sent %s\n", msg);
+        write(fds[1], msg, strlen(msg) + 1);
+    }
+    else
+    {
+        char buf[100];
+        read(fds[0], buf, 100);
+        printf("PARENT:Recv %s\n", buf);
+    }
+    return 0;
 }
