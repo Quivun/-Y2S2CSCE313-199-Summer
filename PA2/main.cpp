@@ -49,7 +49,7 @@ void shell()
             getline(cin, inputline); // get a line from standard input
             vector<string> cmdList = txtSplit(inputline, "|");
             int pid = fork();
-            if (cmdList.size() > 1)
+            if (cmdList.size() < 2)
             {
                 // Regular input output
                 int pid = fork();
