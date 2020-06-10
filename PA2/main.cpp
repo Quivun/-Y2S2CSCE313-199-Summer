@@ -52,6 +52,7 @@ void shell()
             if (cmdList.size() < 2)
             {
                 // Regular input output
+                cout << "Single" << endl;
                 int pid = fork();
                 if (pid == 0)
                 {
@@ -67,6 +68,7 @@ void shell()
             else
             {
                 // Has piping and must now do the deed
+                cout << "Multi" << endl;
                 for (int q = 0; q < cmdList.size(); q++)
                 {
                     int fd[2];
