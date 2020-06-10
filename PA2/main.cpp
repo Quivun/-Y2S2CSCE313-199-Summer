@@ -35,7 +35,8 @@ vector<string> txtSplit(string inp, string divide)
 
 void shell()
 {
-    while (true)
+    bool root = true;
+    while (root)
     {
         cout << "ShellCMDLine$ ";
         string inputline;
@@ -45,6 +46,7 @@ void shell()
         {
             cout << "Shell Exiting" << endl;
             break;
+            // MAybe implement a global reap
         }
         else
         {
@@ -58,6 +60,7 @@ void shell()
                     
                     char *args[] = {(char *)cmdList[0].c_str(), NULL};
                     execvp(args[0], args);
+                    root = false;
                 }
                 else
                 {
@@ -77,6 +80,7 @@ void shell()
                     int pid = fork();
                     if (!pid) // Child
                     {
+                        root = false;
                         if (q < cmdList.size() - 1)
                         {
                             dup2(fd[1], 1); // redirect STDOUT to fd[1], so that it can write to the other side be closed
