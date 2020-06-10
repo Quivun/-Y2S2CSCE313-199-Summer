@@ -35,7 +35,8 @@ vector<string> txtSplit(string inp, string divide)
 
 void shell()
 {
-    while (true)
+    bool isRoot = true;
+    while (isRoot)
     {
         cout << "ShellCMDLine$ ";
         string inputline;
@@ -52,14 +53,11 @@ void shell()
             if (cmdList.size() < 2)
             {
                 // Regular input output
-                cout << endl
-                     << endl
-                     << "Single" << endl
-                     << endl;
+                cout << "Single Testing" << endl;
                 int pid = fork();
                 if (pid == 0)
                 {
-
+                    isRoot = false;
                     char *args[] = {(char *)cmdList[0].c_str(), NULL};
                     int retCode = execvp(args[0], args);
                     if (retCode == -1)
@@ -69,18 +67,16 @@ void shell()
                 }
                 else
                 {
-                    cout << "Me Parent, me wait : " << pid << endl;
+                    cout << "Parent ( " << pid << ") wait on Child."<< endl;
                     waitpid(pid, 0, 0); // wait for the child process
+                    cout << "Parent ( " << pid << ") has returned."<< endl;
                     // we will discuss why waitpid() is preferred over wait()
                 }
             }
             else
             {
                 // Has piping and must now do the deed
-                cout << endl
-                     << endl
-                     << "Multi" << endl
-                     << endl;
+                cout << "Multi Testing" << endl;
                 for (int q = 0; q < cmdList.size(); q++)
                 {
                     int fd[2];
@@ -88,6 +84,7 @@ void shell()
                     int pid = fork();
                     if (!pid) // Child
                     {
+                        isRoot = false;
                         if (q < cmdList.size() - 1)
                         {
                             dup2(fd[1], 1); // redirect STDOUT to fd[1], so that it can write to the other side be closed
