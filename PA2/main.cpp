@@ -59,15 +59,16 @@ void shell()
                 {
                     isRoot = false;
                     char *args[] = {(char *)cmdList[0].c_str(), NULL};
-                    if (-1 == execvp(args[0], args)){
+                    if (-1 == execvp(args[0], args))
+                    {
                         exit(1);
                     }
                 }
                 else
                 {
-                    cout << "Parent ( " << pid << ") wait on Child."<< endl;
+                    cout << "Parent ( " << pid << ") wait on Child." << endl;
                     waitpid(pid, 0, 0); // wait for the child process
-                    cout << "Parent ( " << pid << ") has returned."<< endl;
+                    cout << "Parent ( " << pid << ") has returned." << endl;
                     // we will discuss why waitpid() is preferred over wait()
                 }
             }
@@ -75,37 +76,40 @@ void shell()
             {
                 // Has piping and must now do the deed
                 cout << "Multi Testing" << endl;
-                for (int q = 0; q < cmdList.size(); q++)
+                int fd[2];
+                pipe(fd);
+                int itr = 0;
+                while (itr++ != cmdList.size())
                 {
                     int fd[2];
                     pipe(fd);
                     int pid = fork();
-                    if (!pid) // Child
+                    if (!pid)
                     {
                         isRoot = false;
-                        if (q < cmdList.size() - 1)
-                        {
-                            dup2(fd[1], 1); // redirect STDOUT to fd[1], so that it can write to the other side be closed
-                        }
+                        dup2(fd[1], 1);
                         char *args[] = {(char *)cmdList[q].c_str(), NULL};
-                        if (-1 == execvp(args[0], args)){
-                        exit(1);
+                        if (-1 == execvp(args[0], args))
+                        {
+                            exit(1);
                         }
-                        waitpid(pid, 0, 0);
-                        q = cmdList.size();
                     }
                     else
-                    { // Parent
-                        if (q == cmdList.size() - 1)
+                    {
+                        waitpid(pid, 0, 0);
+                        if (isRoot)
                         {
-                            waitpid(pid, 0, 0);
+                            char *args[] = {(char *)cmdList[q].c_str(), NULL};
+                            if (-1 == execvp(args[0], args))
+                            {
+                                exit(1);
+                            }
                         }
-                        dup2(fd[0], 0); // now redirect the input for the next loop iteration
+                        dup2(fd[0], 0);
                         close(fd[1]);
-                        /*1. wait for the child process running the current level command */
-                        //2. redirect input from the child process
                     }
                 }
+                // If pid, then continue the call list, otherwise wait for the others.
             }
         }
     }
