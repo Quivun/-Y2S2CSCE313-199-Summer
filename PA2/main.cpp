@@ -88,7 +88,7 @@ void shell()
                     {
                         isRoot = false;
                         dup2(fd[1], 1);
-                        char *args[] = {(char *)cmdList[q].c_str(), NULL};
+                        char *args[] = {(char *)cmdList[cmdList.size()-1-itr].c_str(), NULL};
                         if (-1 == execvp(args[0], args))
                         {
                             exit(1);
@@ -99,7 +99,7 @@ void shell()
                         waitpid(pid, 0, 0);
                         if (isRoot)
                         {
-                            char *args[] = {(char *)cmdList[q].c_str(), NULL};
+                            char *args[] = {(char *)cmdList[cmdList.size()-1].c_str(), NULL};
                             if (-1 == execvp(args[0], args))
                             {
                                 exit(1);
