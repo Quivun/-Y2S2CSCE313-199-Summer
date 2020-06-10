@@ -91,6 +91,7 @@ void shell()
                         char *args[] = {(char *)cmdList[cmdList.size()-1-itr].c_str(), NULL};
                         if (-1 == execvp(args[0], args))
                         {
+                            cout << "Child Error" << endl;
                             exit(1);
                         }
                     }
@@ -102,11 +103,13 @@ void shell()
                             char *args[] = {(char *)cmdList[cmdList.size()-1].c_str(), NULL};
                             if (-1 == execvp(args[0], args))
                             {
+                                cout << "Root Error" << endl;
                                 exit(1);
                             }
                         }
                         dup2(fd[0], 0);
                         close(fd[1]);
+                        itr = cmdList.size();
                     }
                 }
                 // If pid, then continue the call list, otherwise wait for the others.
