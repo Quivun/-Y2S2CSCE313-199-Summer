@@ -48,7 +48,6 @@ void shell()
         }
         else
         {
-            int pid = fork();
             if (cmdList.size() < 2)
             {
                 // Regular input output
