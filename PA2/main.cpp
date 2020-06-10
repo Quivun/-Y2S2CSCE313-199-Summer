@@ -88,6 +88,7 @@ void shell()
                     {
                         isRoot = false;
                         dup2(fd[1], 1);
+                        cout << "Child Start" << endl;
                         char *args[] = {(char *)cmdList[cmdList.size()-1-itr].c_str(), NULL};
                         if (-1 == execvp(args[0], args))
                         {
@@ -100,6 +101,8 @@ void shell()
                         waitpid(pid, 0, 0);
                         if (isRoot)
                         {
+                            cout << "Root Start" << endl;
+                            cout << cmdList[cmdList.size()-1] << endl;
                             char *args[] = {(char *)cmdList[cmdList.size()-1].c_str(), NULL};
                             if (-1 == execvp(args[0], args))
                             {
