@@ -52,15 +52,17 @@ void shell()
             if (cmdList.size() < 2)
             {
                 // Regular input output
-                cout << endl << endl << "Single" << endl << endl;
+                cout << endl << endl << "Single" << endl << endl ;
                 int pid = fork();
                 if (pid == 0)
                 {
+                    
                     char *args[] = {(char *)cmdList[0].c_str(), NULL};
                     execvp(args[0], args);
                 }
                 else
                 {
+                    cout << "Me Parent, me wait : " << pid << endl;
                     waitpid(pid, 0, 0); // wait for the child process
                     // we will discuss why waitpid() is preferred over wait()
                 }
