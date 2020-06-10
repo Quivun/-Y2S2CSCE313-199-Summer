@@ -45,7 +45,7 @@ void shell()
         if (inputline == string("exit"))
         {
             cout << "Shell Exiting" << endl;
-            break;
+            exit(0);
             // MAybe implement a global reap
         }
         else
@@ -59,10 +59,8 @@ void shell()
                 {
                     isRoot = false;
                     char *args[] = {(char *)cmdList[0].c_str(), NULL};
-                    int retCode = execvp(args[0], args);
-                    if (retCode == -1)
-                    {
-                        break;
+                    if (-1 == execvp(args[0], args){
+                        exit(1);
                     }
                 }
                 else
@@ -90,12 +88,11 @@ void shell()
                             dup2(fd[1], 1); // redirect STDOUT to fd[1], so that it can write to the other side be closed
                         }
                         char *args[] = {(char *)cmdList[q].c_str(), NULL};
-                        int retCode = execvp(args[0], args);
-                        if (retCode == -1)
-                        {
-                            break;
+                        if (-1 == execvp(args[0], args){
+                        exit(1);
                         }
                         waitpid(pid, 0, 0);
+                        q = cmdList.size();
                     }
                     else
                     { // Parent
