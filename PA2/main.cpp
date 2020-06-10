@@ -39,6 +39,8 @@ void shell()
     {
         cout << "ShellCMDLine$ ";
         string inputline;
+        getline(cin, inputline); // get a line from standard input
+        vector<string> cmdList = txtSplit(inputline, "|");
         if (inputline == string("exit"))
         {
             cout << "Shell Exiting" << endl;
@@ -46,8 +48,6 @@ void shell()
         }
         else
         {
-            getline(cin, inputline); // get a line from standard input
-            vector<string> cmdList = txtSplit(inputline, "|");
             int pid = fork();
             if (cmdList.size() < 2)
             {
@@ -56,7 +56,7 @@ void shell()
                 int pid = fork();
                 if (pid == 0)
                 {
-                    char *args[] = {(char *)inputline.c_str(), NULL};
+                    char *args[] = {(char *)cmdList[0].c_str(), NULL};
                     execvp(args[0], args);
                 }
                 else
