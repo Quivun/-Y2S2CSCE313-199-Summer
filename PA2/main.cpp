@@ -91,6 +91,19 @@ void shell()
             exit(0);
             // Maybe implement a global reap
         }
+        else if (cmdList[0][0] == "cd")
+        {
+            if (cmdList[0].size() == 1)
+            {
+                cout << "It should be changed" << endl;
+                chdir("/");
+            }
+            else
+            {
+                cout << "This is for specifics " << endl;
+                chdir((char *)cmdList[0][1].c_str());
+            }
+        }
         else
         {
             if (cmdList.size() < 2)
@@ -112,19 +125,6 @@ void shell()
                         exit(1);
                     }
                     */
-                    if (cmdList[0][0] == "cd")
-                    {
-                        if (cmdList[0].size() == 1)
-                        {
-                            cout << "It should be changed" << endl;
-                            chdir("/");
-                        }
-                        else
-                        {
-                            cout << "This is for specifics " << endl;
-                            chdir((char*)cmdList[0][1].c_str());
-                        }
-                    }
 
                     char **args = (char **)malloc((cmdList[0].size()) * sizeof(char *));
                     for (int q = 0; q < cmdList[0].size(); q++)
