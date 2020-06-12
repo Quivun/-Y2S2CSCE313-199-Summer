@@ -102,9 +102,7 @@ vector<string> txtSplit(string inp, string divide)
     {
         ret.push_back(cur);
     }
-    for (int q = 0; q < ret.size(); q++){
-        cout << ret[q] << endl;
-    }
+    
     return ret;
 }
 
