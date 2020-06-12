@@ -12,18 +12,22 @@ using namespace std;
 
 int maxLen = sysconf(_SC_ARG_MAX);
 
-
-pair<int,string> msgHandler(string inp, int ind){
-  pair <int, string> ret = {ind,""};
-  string div = inp.substr(ind++,1);
-  for (int q = ind; q < inp.length(); q++){
-    if (inp.substr(q,1) == div){
-    ret.first = q;
-    } else {
-      ret.second += inp.substr(q,1);
+pair<int, string> msgHandler(string inp, int ind)
+{
+    pair<int, string> ret = {ind, ""};
+    string div = inp.substr(ind++, 1);
+    for (int q = ind; q < inp.length(); q++)
+    {
+        if (inp.substr(q, 1) == div)
+        {
+            ret.first = q;
+        }
+        else
+        {
+            ret.second += inp.substr(q, 1);
+        }
     }
-  }
-  return ret;
+    return ret;
 }
 
 vector<string> txtSplit(string inp, string divide)
@@ -32,18 +36,24 @@ vector<string> txtSplit(string inp, string divide)
     string cur = "";
     for (int q = 0; q < inp.length(); q++)
     {
-        if (inp.substr(q,1) == "\"" || inp.substr(q,1) == "\'"){
-            pair<int,string> dQ = msgHandler(inp,q);
-            if (divide == " "){
-            ret.push_back(dQ.second);
-            } else {
+        if (inp.substr(q, 1) == "\"" || inp.substr(q, 1) == "\'")
+        {
+            pair<int, string> dQ = msgHandler(inp, q);
+            if (divide == " ")
+            {
+                ret.push_back(dQ.second);
+            }
+            else
+            {
                 cur += dQ.second;
             }
             q = dQ.first;
-        } else if (divide == inp.substr(q, 1))
+        }
+        else if (divide == inp.substr(q, 1))
         {
-            if (cur.length() > 0){
-            ret.push_back(cur);
+            if (cur.length() > 0)
+            {
+                ret.push_back(cur);
             }
             cur = "";
         }
@@ -59,8 +69,6 @@ vector<string> txtSplit(string inp, string divide)
     return ret;
 }
 
-
-
 void shell()
 {
     bool isRoot = true;
@@ -73,8 +81,9 @@ void shell()
         getline(cin, inputline); // get a line from standard input
         vector<string> cmdListSplitPipe = txtSplit(inputline, "|");
         vector<vector<string>> cmdList;
-        for (int q = 0; q < cmdListSplitPipe.size() ; q++) {
-                cmdList.push_back(txtSplit(cmdListSplitPipe[q]," "));
+        for (int q = 0; q < cmdListSplitPipe.size(); q++)
+        {
+            cmdList.push_back(txtSplit(cmdListSplitPipe[q], " "));
         }
         if (inputline == string("exit"))
         {
@@ -92,13 +101,23 @@ void shell()
                 if (pid == 0)
                 {
                     isRoot = false;
-                    char* args[maxLen];
+                    /*
+                    char* args[maxLen];                
                     for (int q = 0; q < cmdList[0].size(); q++){
-                        strcpy(args[q], cmdList[0][q]);
+                        strcpy(args[q], cmdList[0][q].c_str());
                     }
                     strcpy(args[cmdList[0].size()], NULL);
                     if (-1 == execvp(args[0], args))
                     {
+                        exit(1);
+                    }
+                    */
+                    char **args = malloc((cmdList[0].size()) * sizeof(char *));
+                    for (int q = 0; q < cmdList.size(); q++)
+                    {
+                        args[q] = (char*) cmdList.size().c_str();
+                    }
+                    if (execvp(args[0],args) == -1){
                         exit(1);
                     }
                 }
