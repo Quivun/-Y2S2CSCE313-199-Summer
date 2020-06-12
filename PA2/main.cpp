@@ -71,6 +71,7 @@ vector<string> txtSplit(string inp, string divide)
     {
         if (inp.substr(q, 1) == "\"" || inp.substr(q, 1) == "\'")
         {
+            pair<int, string> dQ;
             if (q != 0 && (ret[q - 1] == "echo" || ret[q - 1] == "Echo"))
             {
                 pair<int, string> dQ = msgHandlerE(inp, q);
@@ -202,8 +203,9 @@ void shell()
             {
                 // Has piping and must now do the deed
 
-                int cycle.while (true)
-                {
+                int piper = fork();
+                if (!piper){
+                    isRoot = false;
                     for (int q = 0; q < cmdList.size(); q++)
                     {
                         int fd[2];
@@ -211,6 +213,7 @@ void shell()
                         int pid = fork();
                         if (!pid)
                         {
+                            isRoot = false;
                             if (q < cmdList.size() - 1)
                             {
                                 dup2(fd[1], 1);
@@ -221,12 +224,14 @@ void shell()
                         {
                             if (q == cmdList.size() - 1)
                             {
-                                waitpid(cid);
+                                waitpid(pid,0,WUNTRACED);
                             }
                             dup2(fd[0], 0);
                             close(fd[1]);
                         }
                     }
+                } else {
+                    waitpid(piper, 0, WUNTRACED);
                 }
                 /*
                 int cycle = 0;
