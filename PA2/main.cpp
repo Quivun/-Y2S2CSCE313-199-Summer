@@ -73,9 +73,9 @@ void shell()
 {
     int std_in = dup(0);
     int std_out = dup(1);
+    bool isRoot = true;
     while (isRoot)
     {
-        bool isRoot = true;
         bool bg = false;
         cout << "ShellCMDLine$ ";
         string inputline;
@@ -189,7 +189,7 @@ void shell()
                     else
                     {
                         if (cycle == cmdList.size()-1){
-                            waitpid(cid);
+                            waitpid(cid,0,0);
                         }
                         dup2(std_in,0);
                         close (std_out);
