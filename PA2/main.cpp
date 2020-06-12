@@ -101,9 +101,7 @@ void shell()
             else
             {
                 cout << "This is for specifics " << endl;
-                char change[cmdList[0][1].size() + 1];
-                strcpy(change, cmdList[0][1].c_str())
-                strcpy (change[cmdList[0][1].size()],NULL);
+                const char* change = cmdList[0][1].c_str();
                 chdir(change);
             }
         }
