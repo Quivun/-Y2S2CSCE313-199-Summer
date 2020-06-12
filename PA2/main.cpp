@@ -76,6 +76,7 @@ void shell()
     int std_out = dup(1);
     while (isRoot)
     {
+        bool bg = false;
         cout << "ShellCMDLine$ ";
         string inputline;
         getline(cin, inputline); // get a line from standard input
@@ -84,6 +85,10 @@ void shell()
         for (int q = 0; q < cmdListSplitPipe.size(); q++)
         {
             cmdList.push_back(txtSplit(cmdListSplitPipe[q], " "));
+        }
+        if (cmdList[cmdList.size() - 1][cmdList[cmdList.size() - 1].size() - 1] == "&")
+        {
+            bg = true;
         }
         if (inputline == string("exit"))
         {
@@ -98,10 +103,13 @@ void shell()
                 // cout << "It should be changed" << endl;
                 chdir("/home/osboxes");
             }
-            else
+            else if (cmdList[0][1] == "-")
+            {
+                chdir("..");
+            }
             {
                 // cout << "This is for specifics " << endl;
-                const char* change = cmdList[0][1].c_str();
+                const char *change = cmdList[0][1].c_str();
                 chdir(change);
             }
         }
@@ -141,7 +149,9 @@ void shell()
                 else
                 {
                     // cout << "Parent ( " << pid << ") wait on Child." << endl;
-                    waitpid(pid, 0, 0); // wait for the child process
+                    if (!bg){
+                        waitpid(pid, 0, 0); // wait for the child process
+                    }
                     // cout << "Parent ( " << pid << ") has returned." << endl;
                     // we will discuss why waitpid() is preferred over wait()
                 }
