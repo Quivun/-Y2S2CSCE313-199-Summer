@@ -116,10 +116,12 @@ void shell()
                     {
                         if (cmdList[0].size() == 1)
                         {
+                            cout << "It should be changed" << endl;
                             chdir("/");
                         }
                         else
                         {
+                            cout << "This is for specifics " << endl;
                             chdir((char*)cmdList[0][1].c_str());
                         }
                     }
