@@ -93,7 +93,7 @@ void shell()
                     for (int q = 0; q < cmdList[0].size(); q++){
                         strcpy(args[q], cmdList[0][q]);
                     }
-                    strcpy(args[cmdList[0].size()], NULL)
+                    strcpy(args[cmdList[0].size()], NULL);
                     if (-1 == execvp(args[0], args))
                     {
                         exit(1);
@@ -115,7 +115,7 @@ void shell()
                 pipe(fd);
                 int itr = 0;
                 if (!fork()){
-                    dup2(fd2[1],1);
+                    dup2(std_out,1);
                     char** args[] = new char*[cmdList]
                 }
                 /*
