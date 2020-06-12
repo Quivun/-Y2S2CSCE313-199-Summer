@@ -15,7 +15,7 @@ int maxLen = sysconf(_SC_ARG_MAX);
 pair<int, string> msgHandler(string inp, int ind)
 {
     pair<int, string> ret = {ind, ""};
-    ret += inp.substr(ind,1);
+    ret.second += inp.substr(ind,1);
     string div = inp.substr(ind++, 1);
     for (int q = ind; q < inp.length(); q++)
     {
