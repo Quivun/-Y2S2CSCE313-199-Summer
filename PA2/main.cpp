@@ -15,12 +15,14 @@ int maxLen = sysconf(_SC_ARG_MAX);
 pair<int, string> msgHandler(string inp, int ind)
 {
     pair<int, string> ret = {ind, ""};
+    ret += inp.substr(ind,1);
     string div = inp.substr(ind++, 1);
     for (int q = ind; q < inp.length(); q++)
     {
         if (inp.substr(q, 1) == div)
         {
             ret.first = q;
+            ret.second += inp.substr(q, 1);
         }
         else
         {
@@ -96,7 +98,7 @@ void shell()
             if (cmdList[0].size() == 1)
             {
                 cout << "It should be changed" << endl;
-                chdir("/");
+                chdir("/home/osboxes");
             }
             else
             {
