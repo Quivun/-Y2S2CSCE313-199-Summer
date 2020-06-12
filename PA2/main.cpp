@@ -76,7 +76,7 @@ void shell()
     int std_out = dup(1);
     while (isRoot)
     {
-        // cout << "ShellCMDLine$ ";
+        cout << "ShellCMDLine$ ";
         string inputline;
         getline(cin, inputline); // get a line from standard input
         vector<string> cmdListSplitPipe = txtSplit(inputline, "|");
