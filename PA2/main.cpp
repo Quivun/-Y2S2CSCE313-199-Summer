@@ -12,6 +12,8 @@ using namespace std;
 
 int maxLen = sysconf(_SC_ARG_MAX);
 
+
+
 pair<int, string> msgHandler(string inp, int ind)
 {
     pair<int, string> ret = {ind, ""};
@@ -112,12 +114,21 @@ void shell()
                         exit(1);
                     }
                     */
-                    char **args = malloc((cmdList[0].size()) * sizeof(char *));
-                    for (int q = 0; q < cmdList.size(); q++)
+                   if (cmdList[0][0] == "cd"){
+                       if (cmdList[0].size() == 1){
+                           chdir("/");
+                       } else {
+                           chdir(cmdList[0][1]);
+                       }
+                   }
+                    char **args = (char **)malloc((cmdList[0].size()) * sizeof(char *));
+                    for (int q = 0; q < cmdList[0].size(); q++)
                     {
-                        args[q] = (char*) cmdList.size().c_str();
+                        args[q] = (char *)cmdList[0][q].c_str();
                     }
-                    if (execvp(args[0],args) == -1){
+                    args[cmdList[0].size()] = (char *)NULL;
+                    if (execvp(args[0], args) == -1)
+                    {
                         exit(1);
                     }
                 }
