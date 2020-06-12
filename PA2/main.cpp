@@ -38,6 +38,7 @@ pair<int, string> msgHandler(string inp, int ind)
         }
         else
         {
+            ret.second+=inp.substr(q,1);
         }
     }
     return ret;
