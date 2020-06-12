@@ -10,6 +10,9 @@
 #include <vector>
 using namespace std;
 
+int maxLen = sysconf(_SC_ARG_MAX);
+
+
 pair<int,string> msgHandler(string inp, int ind){
   pair <int, string> ret = {ind,""};
   string div = inp.substr(ind++,1);
@@ -89,14 +92,15 @@ void shell()
                 if (pid == 0)
                 {
                     isRoot = false;
-                    char* args[cmdList[0].size()+1];
-                    char *cmd = "ls";
-char *argv[3];
-argv[0] = "ls";
-argv[1] = "-la";
-argv[2] = NULL;
-
-execvp(cmd, argv);
+                    char* args[maxLen];
+                    for (int q = 0; q < cmdList[0].size(); q++){
+                        strcpy(args[q], cmdList[0][q]);
+                    }
+                    strcpy(args[cmdList[0].size()], NULL);
+                    if (-1 == execvp(args[0], args))
+                    {
+                        exit(1);
+                    }
                 }
                 else
                 {
