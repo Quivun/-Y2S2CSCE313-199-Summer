@@ -69,9 +69,7 @@ vector<string> txtSplit(string inp, string divide)
     {
         if (inp.substr(q, 1) == "\"" || inp.substr(q, 1) == "\'")
         {
-            
             pair<int, string> dQ = msgHandler(inp, q);
-
             if (divide == " ")
             {
                 ret.push_back(dQ.second);
@@ -98,6 +96,9 @@ vector<string> txtSplit(string inp, string divide)
     if (cur.length() != 0)
     {
         ret.push_back(cur);
+    }
+    for (int q = 0; q < ret.size(); q++){
+        cout << ret[q] << endl;
     }
     return ret;
 }
