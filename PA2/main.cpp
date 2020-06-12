@@ -71,11 +71,11 @@ vector<string> txtSplit(string inp, string divide)
 
 void shell()
 {
-    bool isRoot = true;
     int std_in = dup(0);
     int std_out = dup(1);
     while (isRoot)
     {
+        bool isRoot = true;
         bool bg = false;
         cout << "ShellCMDLine$ ";
         string inputline;
@@ -150,7 +150,8 @@ void shell()
                 else
                 {
                     // cout << "Parent ( " << pid << ") wait on Child." << endl;
-                    if (!bg){
+                    if (!bg)
+                    {
                         waitpid(pid, 0, 0); // wait for the child process
                     }
                     // cout << "Parent ( " << pid << ") has returned." << endl;
@@ -161,15 +162,39 @@ void shell()
             {
                 // Has piping and must now do the deed
                 /*
-                // cout << "Multi Testing" << endl;
                 int fd[2];
                 pipe(fd);
-                int itr = 0;
-                if (!fork()){
-                    dup2(std_out,1);
-                    char** args[] = new char*[cmdList].size()]
-                }
                 */
+                int cid = fork();
+                int cycle = 0;
+                while (cycle < cmdList.size())
+                {
+                    if (!cid)
+                    {
+                        if (cycle < cmdList.size() - 1)
+                        {
+                            dup2(std_out, 1);
+                        }
+                        char **args = (char **)malloc((cmdList[cycle++].size()) * sizeof(char *));
+                        for (int q = 0; q < cmdList[0].size(); q++)
+                        {
+                            args[q] = (char *)cmdList[0][q].c_str();
+                        }
+                        args[cmdList[0].size()] = (char *)NULL;
+                        if (execvp(args[0], args) == -1)
+                        {
+                            exit(1);
+                        }
+                    }
+                    else
+                    {
+                        if (cycle == cmdList.size()-1){
+                            waitpid(cid);
+                        }
+                        dup2(std_in,0);
+                        close (std_out);
+                    }
+                }
                 /*
                 while (itr++ != cmdList.size())
                 {
