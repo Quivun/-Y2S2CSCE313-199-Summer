@@ -89,7 +89,7 @@ void shell()
                 if (pid == 0)
                 {
                     isRoot = false;
-                    char** args[] = new char *[cmdList[0].size()+1];
+                    char* args[] = new char *[cmdList[0].size()+1];
                     for (int q = 0; q < cmdList[0].size(); q++){
                         strcpy(args[q], cmdList[0][q]);
                     }
@@ -110,6 +110,7 @@ void shell()
             else
             {
                 // Has piping and must now do the deed
+                /*
                 cout << "Multi Testing" << endl;
                 int fd[2];
                 pipe(fd);
@@ -118,6 +119,7 @@ void shell()
                     dup2(std_out,1);
                     char** args[] = new char*[cmdList].size()]
                 }
+                */
                 /*
                 while (itr++ != cmdList.size())
                 {
