@@ -72,7 +72,7 @@ vector<string> txtSplit(string inp, string divide)
         if (inp.substr(q, 1) == "\"" || inp.substr(q, 1) == "\'")
         {
             pair<int, string> dQ;
-            if (q != 0 && (ret[q - 1] == "echo" || ret[q - 1] == "Echo"))
+            if (ret.size() > 0 && (ret[q - 1] == "echo" || ret[q - 1] == "Echo"))
             {
                 pair<int, string> dQ = msgHandlerE(inp, q);
             }
