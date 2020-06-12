@@ -29,6 +29,7 @@ pair<int, string> msgHandler(string inp, int ind)
 {
     pair<int, string> ret = {ind, ""};
     string div = inp.substr(ind++, 1);
+    ret.second += div;
     for (int q = ind; q < inp.length(); q++)
     {
         if (inp.substr(q, 1) == div)
@@ -71,6 +72,9 @@ vector<string> txtSplit(string inp, string divide)
         if (inp.substr(q, 1) == "\"" || inp.substr(q, 1) == "\'")
         {
             pair<int, string> dQ = msgHandler(inp, q);
+            if ("echo" == ret[q-1] || "Echo" == ret[q-1]){
+                dQ = msgHandlerE(inp, q);
+            }
             if (divide == " ")
             {
                 ret.push_back(dQ.second);
