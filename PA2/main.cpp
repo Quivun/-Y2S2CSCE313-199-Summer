@@ -12,6 +12,19 @@ using namespace std;
 
 int maxLen = sysconf(_SC_ARG_MAX);
 
+void execute(vector<string> inp)
+{
+    char **args = (char **)malloc((inp.size()) * sizeof(char *));
+    for (int q = 0; q < inp.size(); q++)
+    {
+        args[q] = (char *)inp[q].c_str();
+    }
+    args[inp.size()] = (char *)NULL;
+    if (execvp(args[0], args) == -1)
+    {
+        exit(1);
+    }
+}
 pair<int, string> msgHandler(string inp, int ind)
 {
     pair<int, string> ret = {ind, ""};
@@ -161,10 +174,34 @@ void shell()
             else
             {
                 // Has piping and must now do the deed
+
+                int cycle.while (true)
+                {
+                    for (int q = 0; q < cmdList.size(); q++)
+                    {
+                        int fd[2];
+                        pipe(fd);
+                        int pid = fork();
+                        if (!pid)
+                        {
+                            if (q < cmdList.size() - 1)
+                            {
+                                dup2(fd[1], 1);
+                            }
+                            execute(cmdList[q]);
+                        }
+                        else
+                        {
+                            if (q == cmdList.size() - 1)
+                            {
+                                waitpid(cid);
+                            }
+                            dup2(fd[0], 0);
+                            close(fd[1]);
+                        }
+                    }
+                }
                 /*
-                int fd[2];
-                pipe(fd);
-                */
                 int cycle = 0;
                 while (cycle < cmdList.size())
                 {
@@ -184,9 +221,8 @@ void shell()
                         if (execvp(args[0], args) == -1)
                         {
                             exit(1);
-                        } else {
-                            exit(0);
                         }
+                        break;
                     }
                     else
                     {
@@ -197,6 +233,7 @@ void shell()
                         close (std_out);
                     }
                 }
+                */
                 /*
                 while (itr++ != cmdList.size())
                 {
