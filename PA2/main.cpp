@@ -89,15 +89,14 @@ void shell()
                 if (pid == 0)
                 {
                     isRoot = false;
-                    char* args[] = new char *[cmdList[0].size()+1];
-                    for (int q = 0; q < cmdList[0].size(); q++){
-                        strcpy(args[q], cmdList[0][q]);
-                    }
-                    strcpy(args[cmdList[0].size()], NULL);
-                    if (-1 == execvp(args[0], args))
-                    {
-                        exit(1);
-                    }
+                    char* args[cmdList[0].size()+1];
+                    char *cmd = "ls";
+char *argv[3];
+argv[0] = "ls";
+argv[1] = "-la";
+argv[2] = NULL;
+
+execvp(cmd, argv);
                 }
                 else
                 {
