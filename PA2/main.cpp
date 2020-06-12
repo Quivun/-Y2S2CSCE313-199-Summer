@@ -76,7 +76,7 @@ void shell()
     int std_out = dup(1);
     while (isRoot)
     {
-        cout << "ShellCMDLine$ ";
+        // cout << "ShellCMDLine$ ";
         string inputline;
         getline(cin, inputline); // get a line from standard input
         vector<string> cmdListSplitPipe = txtSplit(inputline, "|");
@@ -87,7 +87,7 @@ void shell()
         }
         if (inputline == string("exit"))
         {
-            cout << "Shell Exiting" << endl;
+            // cout << "Shell Exiting" << endl;
             exit(0);
             // Maybe implement a global reap
         }
@@ -95,12 +95,12 @@ void shell()
         {
             if (cmdList[0].size() == 1)
             {
-                cout << "It should be changed" << endl;
+                // cout << "It should be changed" << endl;
                 chdir("/home/osboxes");
             }
             else
             {
-                cout << "This is for specifics " << endl;
+                // cout << "This is for specifics " << endl;
                 const char* change = cmdList[0][1].c_str();
                 chdir(change);
             }
@@ -110,7 +110,7 @@ void shell()
             if (cmdList.size() < 2)
             {
                 // Regular input output
-                cout << "Single Testing" << endl;
+                // cout << "Single Testing" << endl;
                 int pid = fork();
                 if (pid == 0)
                 {
@@ -140,9 +140,9 @@ void shell()
                 }
                 else
                 {
-                    cout << "Parent ( " << pid << ") wait on Child." << endl;
+                    // cout << "Parent ( " << pid << ") wait on Child." << endl;
                     waitpid(pid, 0, 0); // wait for the child process
-                    cout << "Parent ( " << pid << ") has returned." << endl;
+                    // cout << "Parent ( " << pid << ") has returned." << endl;
                     // we will discuss why waitpid() is preferred over wait()
                 }
             }
@@ -150,7 +150,7 @@ void shell()
             {
                 // Has piping and must now do the deed
                 /*
-                cout << "Multi Testing" << endl;
+                // cout << "Multi Testing" << endl;
                 int fd[2];
                 pipe(fd);
                 int itr = 0;
@@ -169,11 +169,11 @@ void shell()
                     {
                         isRoot = false;
                         dup2(fd[1], 1);
-                        cout << "Child Start" << endl;
+                        // cout << "Child Start" << endl;
                         char *args[] = {(char *)cmdList[cmdList.size()-1-itr].c_str(), NULL};
                         if (-1 == execvp(args[0], args))
                         {
-                            cout << "Child Error" << endl;
+                            // cout << "Child Error" << endl;
                             exit(1);
                         }
                     }
@@ -182,12 +182,12 @@ void shell()
                         waitpid(pid, 0, 0);
                         if (isRoot)
                         {
-                            cout << "Root Start" << endl;
-                            cout << cmdList[cmdList.size()-1] << endl;
+                            // cout << "Root Start" << endl;
+                            // cout << cmdList[cmdList.size()-1] << endl;
                             char *args[] = {(char *)cmdList[cmdList.size()-1].c_str(), NULL};
                             if (-1 == execvp(args[0], args))
                             {
-                                cout << "Root Error" << endl;
+                                // cout << "Root Error" << endl;
                                 exit(1);
                             }
                         } else {
