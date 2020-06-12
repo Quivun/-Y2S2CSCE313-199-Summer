@@ -116,7 +116,7 @@ void shell()
                 int itr = 0;
                 if (!fork()){
                     dup2(std_out,1);
-                    char** args[] = new char*[cmdList]
+                    char** args[] = new char*[cmdList].size()]
                 }
                 /*
                 while (itr++ != cmdList.size())
