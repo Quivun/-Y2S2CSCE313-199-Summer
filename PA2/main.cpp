@@ -165,10 +165,10 @@ void shell()
                 int fd[2];
                 pipe(fd);
                 */
-                int cid = fork();
                 int cycle = 0;
                 while (cycle < cmdList.size())
                 {
+                    int cid = fork();
                     if (!cid)
                     {
                         if (cycle < cmdList.size() - 1)
@@ -184,6 +184,8 @@ void shell()
                         if (execvp(args[0], args) == -1)
                         {
                             exit(1);
+                        } else {
+                            exit(0);
                         }
                     }
                     else
