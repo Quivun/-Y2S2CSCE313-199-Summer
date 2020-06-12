@@ -89,6 +89,7 @@ void shell()
         if (cmdList[cmdList.size() - 1][cmdList[cmdList.size() - 1].size() - 1] == "&")
         {
             bg = true;
+            cmdList[cmdList.size() - 1].pop_back();
         }
         if (inputline == string("exit"))
         {
