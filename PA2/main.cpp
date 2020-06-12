@@ -120,7 +120,7 @@ void shell()
                         }
                         else
                         {
-                            chdir(cmdList[0][1]);
+                            chdir((char*)cmdList[0][1].c_str());
                         }
                     }
 
