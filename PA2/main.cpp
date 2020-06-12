@@ -10,15 +10,38 @@
 #include <vector>
 using namespace std;
 
+pair<int,string> msgHandler(string inp, int ind){
+  pair <int, string> ret = {ind,""};
+  string div = inp.substr(ind++,1);
+  for (int q = ind; q < inp.length(); q++){
+    if (inp.substr(q,1) == div){
+    ret.first = q;
+    } else {
+      ret.second += inp.substr(q,1);
+    }
+  }
+  return ret;
+}
+
 vector<string> txtSplit(string inp, string divide)
 {
     vector<string> ret;
     string cur = "";
     for (int q = 0; q < inp.length(); q++)
     {
-        if (divide == inp.substr(q, 1))
+        if (inp.substr(q,1) == "\"" || inp.substr(q,1) == "\'"){
+            pair<int,string> dQ = msgHandler(inp,q);
+            if (divide == " "){
+            ret.push_back(dQ.second);
+            } else {
+                cur += dQ.second;
+            }
+            q = dQ.first;
+        } else if (divide == inp.substr(q, 1))
         {
+            if (cur.length() > 0){
             ret.push_back(cur);
+            }
             cur = "";
         }
         else
@@ -33,20 +56,28 @@ vector<string> txtSplit(string inp, string divide)
     return ret;
 }
 
+
+
 void shell()
 {
     bool isRoot = true;
+    int std_in = dup(0);
+    int std_out = dup(1);
     while (isRoot)
     {
         cout << "ShellCMDLine$ ";
         string inputline;
         getline(cin, inputline); // get a line from standard input
-        vector<string> cmdList = txtSplit(inputline, "|");
+        vector<string> cmdListSplitPipe = txtSplit(inputline, "|");
+        vector<vector<string>> cmdList;
+        for (int q = 0; q < cmdListSplitPipe.size() ; q++) {
+                cmdList.push_back(txtSplit(cmdListSplitPipe[q]," "));
+        }
         if (inputline == string("exit"))
         {
             cout << "Shell Exiting" << endl;
             exit(0);
-            // MAybe implement a global reap
+            // Maybe implement a global reap
         }
         else
         {
@@ -58,7 +89,11 @@ void shell()
                 if (pid == 0)
                 {
                     isRoot = false;
-                    char *args[] = {(char *)cmdList[0].c_str(), NULL};
+                    char** args[] = new char *[cmdList[0].size()+1];
+                    for (int q = 0; q < cmdList[0].size(); q++){
+                        strcpy(args[q], cmdList[0][q]);
+                    }
+                    strcpy(args[cmdList[0].size()], NULL)
                     if (-1 == execvp(args[0], args))
                     {
                         exit(1);
@@ -79,6 +114,11 @@ void shell()
                 int fd[2];
                 pipe(fd);
                 int itr = 0;
+                if (!fork()){
+                    dup2(fd2[1],1);
+                    char** args[] = new char*[cmdList]
+                }
+                /*
                 while (itr++ != cmdList.size())
                 {
                     int fd[2];
@@ -109,12 +149,14 @@ void shell()
                                 cout << "Root Error" << endl;
                                 exit(1);
                             }
-                        }
+                        } else {
                         dup2(fd[0], 0);
                         close(fd[1]);
                         itr = cmdList.size();
+                        }
                     }
                 }
+                */
                 // If pid, then continue the call list, otherwise wait for the others.
             }
         }
