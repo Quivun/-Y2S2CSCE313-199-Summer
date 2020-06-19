@@ -28,7 +28,7 @@ FIFORequestChannel *create_new_channel(FIFORequestChannel *mainchan)
 void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request_buffer)
 {
     /* What will the patient threads do? */
-    int timestamp = 0;
+    double timestamp = 0;
     int ecg = 1;
     double resp = 0;
     datamsg d(patientNum, timestamp, ecg);
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     int opt;
     int n = 15000;        //default number of requests per "patient"
     int p = 1;          // number of patients [1,15]
-    int w = 5;         //default number of worker threads
+    int w = 200;         //default number of worker threads
     int b = 500;          // default capacity of the request buffer, you should change this default
     int m = MAX_MESSAGE; // default capacity of the message buffer
     while ((opt = getopt(argc, argv, "n:p:w:b:m:")) != -1)
