@@ -58,7 +58,7 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
         {
             // Send to data channel
             chan->cwrite(buf, sizeof(datamsg));
-            chan->cread(resp, sizeof(double));
+            chan->cread(&resp, sizeof(double));
             hc->update(((datamsg *)buf)->person, resp);
         }
         else if (m * == FILE_MSG)
