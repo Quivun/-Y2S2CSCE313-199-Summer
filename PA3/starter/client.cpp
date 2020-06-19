@@ -47,6 +47,7 @@ void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request
 
 void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buffer, HistogramCollection *hc)
 {
+    cout << "WorkThreadFunc_Start" << endl;
     int bufferSize = 1024;
     char buf[bufferSize];
     double resp = 0;
@@ -75,6 +76,7 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
             break;
         }
     }
+    cout << "WorkThreadFunc_End" << endl;
     /*
 		Functionality of the worker threads	
     */
@@ -183,7 +185,12 @@ int main(int argc, char *argv[])
     }
     cout << "Patient complete!" << endl;
     // They will now see the quit message.
-    
+    for (int q = 0; q < w; q++)
+    {
+        MESSAGE_TYPE quit = QUIT_MSG;
+        request_buffer.push((char *)&quit, sizeof(quit));
+    }
+    //
     cout << "Workers start..." << endl;
 
     for (int q = 0; q < w; q++)
