@@ -141,6 +141,7 @@ int main(int argc, char *argv[])
     }
 
     // Make worker channels
+    cout << "Making worker channels" << endl;
     FIFORequestChannel *wchans[w];
     for (int q = 0; q < w; q++)
     {
@@ -150,34 +151,46 @@ int main(int argc, char *argv[])
     struct timeval start, end;
     gettimeofday(&start, 0);
 
+    cout << "Beginning thread creation" << endl;
     /* Start all threads here */
+    cout << "Patient start..." << endl;
     thread patient[p];
     for (int q = 0; q < p; q++)
     {
         patient[q] = thread(patient_thread_function, n, q + 1, &request_buffer);
     }
     // Remember the patient threads are pushing, the worker threads are popping.
-
+    cout << "Patient complete!" << endl;
+    cout << "Workers start..." << endl;
     thread workers[w];
     for (int q = 0; q < w; q++)
     {
         workers[q] = thread(worker_thread_function, wchans[q], &request_buffer, &hc);
     }
-
+    cout << "Workers complete!" << endl;
     /* Join all threads here */
+    cout << "Joining threads" << endl;
+    cout << "Patient start..." << endl;
+
     for (int q = 0; q < p; q++)
     {
         patient[q].join();
     }
+    cout << "Patient complete!" << endl;
+    cout << "Workers start..." << endl;
+
     for (int q = 0; q < p; q++)
     {
         workers[q].join();
     }
+    cout << "Workers complete!" << endl;
+
     gettimeofday(&end, 0);
     // print the results
+    cout << endl << endl;
     hc.print();
     timediff(start, end);
-
+cout << endl << endl;
     /*
     int secs = (end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) / (int)1e6;
     int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
@@ -195,8 +208,9 @@ int main(int argc, char *argv[])
     // Done so within the worker thread function via quit message.
     */
     // Cleaning up the main channel
+    cout << "Deleting main channel" << endl;
     MESSAGE_TYPE quit = QUIT_MSG;
     chan->cwrite((char *)&quit, sizeof(MESSAGE_TYPE));
-    cout << "All Done!!!" << endl;
+    cout << "Client side complete!" << endl;
     delete chan;
 }
