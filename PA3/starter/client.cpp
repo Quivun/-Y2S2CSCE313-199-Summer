@@ -6,11 +6,13 @@
 #include "FIFOreqchannel.h"
 #include <time.h>
 #include <thread>
-// Cautionary rollback
 using namespace std;
 
 void timediff(struct timeval &start, struct timeval &end)
 {
+    int secs = (end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) / (int)1e6;
+    int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
+    cout << "Took " << secs << " seconds and " << usecs << " micro seconds" << endl;
 }
 
 FIFORequestChannel *create_new_channel(FIFORequestChannel *mainchan)
@@ -23,7 +25,7 @@ FIFORequestChannel *create_new_channel(FIFORequestChannel *mainchan)
     FIFORequestChannel *newchan = new FIFORequestChannel(name, FIFORequestChannel::CLIENT_SIDE);
     return newchan;
 }
-void patient_thread_function(/*add necessary arguments*/ int dataNum, int patientNum, FIFORequestChannel *chan, HistogramCollection *hc)
+void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request_buffer)
 {
     /* What will the patient threads do? */
     int timestamp = 0;
@@ -33,15 +35,45 @@ void patient_thread_function(/*add necessary arguments*/ int dataNum, int patien
 
     for (int q = 0; q < dataNum; q++)
     {
-        chan->cwrite(&d, sizeof(datamsg));
+        /*chan->cwrite(&d, sizeof(datamsg));
         chan->cread(&resp, sizeof(double));
         hc->update(patientNum, resp);
+        */
+        // Done by worker threads as they only have access to fifo requeest channel
+        request_buffer->push((char *)&d, sizeof(datamsg));
         d.seconds += 0.004;
     }
 }
 
-void worker_thread_function(/*add necessary arguments*/)
+void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buffer, HistogramCollection *hc)
 {
+    int bufferSize = 1024;
+    char buf[bufferSize];
+    double resp = 0;
+    while (true)
+    {
+        request_buffer->pop(buf, bufferSize);
+        MESSAGE_TYPE *m = (MESSAGE_TYPE *)buf;
+        if (*m = DATA_MSG)
+        {
+            // Send to data channel
+            chan->cwrite(buf, sizeof(datamsg));
+            chan->cread(resp, sizeof(double));
+            hc->update(((datamsg *)buf)->person, resp);
+        }
+        else if (m * == FILE_MSG)
+        {
+            // TBD File Message
+        }
+        else if (*m == QUIT_MSG)
+        {
+            // Send quit
+            chan->cwrite(m, sizeof(MESSATE_TYPE));
+            delete chan;
+            // Because of this we don't need to cleanup within the main.
+            break;
+        }
+    }
     /*
 		Functionality of the worker threads	
     */
@@ -108,8 +140,8 @@ int main(int argc, char *argv[])
     }
 
     // Make worker channels
-    FIFORequestChannel *wchans[p];
-    for (int q = 0; q < p; q++)
+    FIFORequestChannel *wchans[w];
+    for (int q = 0; q < w; q++)
     {
         wchans[q] = create_new_channel(chan);
     }
@@ -121,7 +153,14 @@ int main(int argc, char *argv[])
     thread patient[p];
     for (int q = 0; q < p; q++)
     {
-        patient[q] = thread(patient_thread_function, n, q + 1, wchans[q], &hc);
+        patient[q] = thread(patient_thread_function, n, q + 1, &request_buffer);
+    }
+    // Remember the patient threads are pushing, the worker threads are popping.
+
+    thread workers[w];
+    for (int q = 0; q < w; q++)
+    {
+        workers[q] = thread(worker_thread_function, wchans[q], &request_buffer, &hc);
     }
 
     /* Join all threads here */
@@ -129,23 +168,34 @@ int main(int argc, char *argv[])
     {
         patient[q].join();
     }
+    for (int q = 0; q < p; q++)
+    {
+        workers[q].join();
+    }
     gettimeofday(&end, 0);
     // print the results
     hc.print();
+    timediff(start, end);
+
+    /*
     int secs = (end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) / (int)1e6;
     int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
     cout << "Took " << secs << " seconds and " << usecs << " micro seconds" << endl;
+    */
 
     // Cleaning up the worker channels
-    for (int q = 0; q < p; q++)
+    /*
+    for (int q = 0; q < w; q++)
     {
         MESSAGE_TYPE quit = QUIT_MSG;
         wchans[q]->cwrite((char *)&quit, sizeof(MESSAGE_TYPE));
         delete wchans[q];
     }
+    // Done so within the worker thread function via quit message.
+    */
     // Cleaning up the main channel
-    MESSAGE_TYPE q = QUIT_MSG;
-    chan->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
+    MESSAGE_TYPE quit = QUIT_MSG;
+    chan->cwrite((char *)&quit, sizeof(MESSAGE_TYPE));
     cout << "All Done!!!" << endl;
     delete chan;
 }
