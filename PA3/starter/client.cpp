@@ -61,7 +61,7 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
             chan->cread(&resp, sizeof(double));
             hc->update(((datamsg *)buf)->person, resp);
         }
-        else if (m * == FILE_MSG)
+        else if (*m == FILE_MSG)
         {
             // TBD File Message
             ;
