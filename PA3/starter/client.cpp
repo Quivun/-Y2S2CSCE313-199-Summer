@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     // They will now see the quit message.
     for (int q = 0; q < w; q++){
         MESSAGE_TYPE quit = QUIT_MSG;
-        request_buffer((char*) &quit, sizeof(quit));
+        request_buffer((char*) &quit, sizeof(MESSAGE_TYPE));
     }
     cout << "Workers start..." << endl;
 
