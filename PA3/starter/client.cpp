@@ -140,8 +140,8 @@ int main(int argc, char *argv[])
     for (int q = 0; q < p; q++)
     {
         MESSAGE_TYPE q = QUIT_MSG;
-        wchan[q]->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
-        delete wchan[q];
+        wchans[q]->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
+        delete wchans[q];
     }
     // Cleaning up the main channel
     MESSAGE_TYPE q = QUIT_MSG;
