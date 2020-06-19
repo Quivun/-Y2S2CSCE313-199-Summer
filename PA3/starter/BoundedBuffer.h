@@ -79,7 +79,7 @@ public:
 
 		//3. Convert the popped vector<char> into a char*, copy that into buf, make sure that vector<char>'s length is <= bufcap
 		assert(d.size() <= bufcap); // If this statement is false, then it will crash our program. It shouldn't happen but if it does we exit our program. It's a cautionary measure.
-		memcpy(d.data(), d.size()); // Memcopy that onto the buffer
+		memcpy(buf,d.data(), d.size()); // Memcopy that onto the buffer
 
 		
 		//5. Wake up any potentially sleeping push() functions.

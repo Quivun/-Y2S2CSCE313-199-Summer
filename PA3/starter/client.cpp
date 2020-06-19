@@ -64,6 +64,7 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
         else if (m * == FILE_MSG)
         {
             // TBD File Message
+            ;
         }
         else if (*m == QUIT_MSG)
         {
