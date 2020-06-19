@@ -6,7 +6,7 @@
 #include "FIFOreqchannel.h"
 #include <time.h>
 #include <thread>
-
+// Cautionary rollback
 using namespace std;
 
 void timediff(struct timeval &start, struct timeval &end)
