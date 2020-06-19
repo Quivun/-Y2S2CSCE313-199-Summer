@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
     }
     cout << "Workers start..." << endl;
 
-    for (int q = 0; q < p; q++)
+    for (int q = 0; q < w; q++)
     {
         workers[q].join();
     }
