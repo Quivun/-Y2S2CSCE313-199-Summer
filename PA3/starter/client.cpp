@@ -177,6 +177,7 @@ int main(int argc, char *argv[])
 
     for (int q = 0; q < p; q++)
     {
+        cout << q << endl;
         patient[q].join();
     }
     cout << "Patient complete!" << endl;
