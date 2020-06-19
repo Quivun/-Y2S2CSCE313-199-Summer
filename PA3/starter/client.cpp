@@ -139,8 +139,8 @@ int main(int argc, char *argv[])
     // Cleaning up the worker channels
     for (int q = 0; q < p; q++)
     {
-        MESSAGE_TYPE q = QUIT_MSG;
-        wchans[q]->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
+        MESSAGE_TYPE quit = QUIT_MSG;
+        wchans[q]->cwrite((char *)&quit, sizeof(MESSAGE_TYPE));
         delete wchans[q];
     }
     // Cleaning up the main channel
