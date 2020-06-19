@@ -16,7 +16,7 @@ using namespace std;
 class BoundedBuffer
 {
 private:
-	int cap; // max number of items in the buffer
+	int cap = 0; // max number of items in the buffer
 	queue<vector<char>> q;	/* the queue of items in the buffer. Note
 	that each item a sequence of characters that is best represented by a vector<char> for 2 reasons:
 	1. An STL std::string cannot keep binary/non-printables
@@ -46,7 +46,7 @@ public:
 		// TBD
 		// vid2 start
 		unique_lock<mutex> l(m);
-		slot_availible.wait(l,[this]{return (q.size() < cap);}); // To make sure the queue size is proper, we can only push when queue size is less than capacity, good conditions.
+		slot_availible.wait(l,[this]{ return q.size() < cap;}); // To make sure the queue size is proper, we can only push when queue size is less than capacity, good conditions.
 		
 		// 0 can also be done here.
 		//2. Then push the vector at the end of the queue, but not so quickly. Watch out for race condition.
