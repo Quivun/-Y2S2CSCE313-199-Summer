@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <queue>
 #include <string>
-#include <pthread.h>
+#include <thread>
 #include <thread>
 #include <mutex>
 #include <assert.h>

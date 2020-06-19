@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <pthread.h>
+#include <thread>
 using namespace std;
 
 class Histogram {

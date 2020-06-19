@@ -25,7 +25,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <unistd.h>
-#include <pthread.h>
+#include <thread>
 
 using namespace std;
 
