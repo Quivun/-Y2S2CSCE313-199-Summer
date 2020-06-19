@@ -68,11 +68,10 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
         else if (*m == QUIT_MSG)
         {
             // Send quit
-            chan->cwrite(m, sizeof(MESSAGE_TYPE));
+            chan->cwrite((char*)&m, sizeof(MESSAGE_TYPE));
             delete chan;
             // Because of this we don't need to cleanup within the main.
             break;
-        }
     }
     /*
 		Functionality of the worker threads	
