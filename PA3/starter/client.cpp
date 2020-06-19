@@ -68,7 +68,8 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
         else if (*m == QUIT_MSG)
         {
             // Send quit
-            chan->cwrite((char *)&m, sizeof(MESSAGE_TYPE));
+            // chan->cwrite((char *)&m, sizeof(MESSAGE_TYPE));
+            chan->cwrite(m, sizeof(MESSAGE_TYPE));
             delete chan;
             // Because of this we don't need to cleanup within the main.
             break;
@@ -182,11 +183,7 @@ int main(int argc, char *argv[])
     }
     cout << "Patient complete!" << endl;
     // They will now see the quit message.
-    for (int q = 0; q < w; q++)
-    {
-        MESSAGE_TYPE quit = QUIT_MSG;
-        request_buffer.push((char *)&quit, sizeof(quit));
-    }
+    
     cout << "Workers start..." << endl;
 
     for (int q = 0; q < w; q++)
