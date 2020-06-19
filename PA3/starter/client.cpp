@@ -48,6 +48,7 @@ void worker_thread_function(/*add necessary arguments*/)
 
 int main(int argc, char *argv[])
 {
+    int opt;
     int n = 1000;        //default number of requests per "patient"
     int p = 10;          // number of patients [1,15]
     int w = 100;         //default number of worker threads
@@ -123,7 +124,7 @@ int main(int argc, char *argv[])
     }
 
     /* Join all threads here */
-    for (intq = 0; q < p; q++)
+    for (int q = 0; q < p; q++)
     {
         patient[q].join();
     }
