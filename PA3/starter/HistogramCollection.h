@@ -55,6 +55,9 @@ public:
         cout << endl;
     }
 
+    void update (int patientNum, double value){
+        hists[patientNum-1]->update(value);
+    }
     
 
     

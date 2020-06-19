@@ -1,131 +1,141 @@
-class Solution {
-public:
-    // Splits an input string given a dividing character(s). O(n).
-    vector<string> splitter (string inp, string div){
-        vector<string> ret;
-        if (div.length() == 0){
-            return ret;
-        }
-        string cur = "";
-        for (int q =0; q <= inp.length() - div.length(); q++){
-            if (inp.substr(q,div.length()) == div){
-                if (cur.length() > 0){
-                    ret.push_back(cur);
-                }
-                cur = "";
-            } else {
-                cur += inp.substr(q,1);
-            }
-        }
-        if (cur.length() > 0){
-            ret.push_back(cur);
-        }
-        return ret;
+#include "common.h"
+#include "BoundedBuffer.h"
+#include "Histogram.h"
+#include "common.h"
+#include "HistogramCollection.h"
+#include "FIFOreqchannel.h"
+#include <time.h>
+#include <thread>
+
+using namespace std;
+
+void timediff(struct timeval &start, struct timeval &end)
+{
+}
+
+FIFORequestChannel *create_new_channel(FIFORequestChannel *mainchan)
+{
+    int bufferSize = 1024;
+    char name[bufferSize];
+    mainchan->cwrite(&m sizeof(m));
+    mainchan->cread(name, bufferSize);
+    FIFORequestChannel *newchan = new FIFORequestChannel(name, FIFORequestChannel::CLIENT_SIDE);
+    return newchan;
+}
+void patient_thread_function(/*add necessary arguments*/ int dataNum, int patientNum, FIFORequestChannel *chan, HistogramCollection *hc)
+{
+    /* What will the patient threads do? */
+    int timestamp = 0;
+    int ecg = 1;
+    double resp = 0;
+    datamsg d(patientNum, timestamp, ecg);
+
+    for (int q = 0; q < dataNum; q++)
+    {
+        chan->cwrite(&d, sizeof(datamsg));
+        chan->cread(&resp, sizeof(double));
+        hc->update(patientNum, resp);
+        d.seconds += 0.004;
     }
-    // Locates a character given an input string. O(n).
-    bool stringIn(string inp, string item){
-        for (int q = 0; q < inp.length(); q++){
-            if (item == inp.substr(q,item.length())){
-                return true;
-            }
+}
+
+void worker_thread_function(/*add necessary arguments*/)
+{
+    /*
+		Functionality of the worker threads	
+    */
+}
+
+int main(int argc, char *argv[])
+{
+    int n = 1000;        //default number of requests per "patient"
+    int p = 10;          // number of patients [1,15]
+    int w = 100;         //default number of worker threads
+    int b = 20;          // default capacity of the request buffer, you should change this default
+    int m = MAX_MESSAGE; // default capacity of the message buffer
+    while ((opt = getopt(argc, argv, "n:p:w:b:m:")) != -1)
+    {
+        switch (opt)
+        {
+        case 'n':
+            n = atoi(optarg);
+            break;
+        case 'p':
+            p = atoi(optarg);
+            break;
+        case 'w':
+            w = atoi(optarg);
+            break;
+        case 'b':
+            b = atoi(optarg);
+            break;
+        case 'm':
+            m = atoi(optarg);
+            break;
+        case '?':
+            cout << "Incorrect input detected." << endl;
+            break;
+        default:
+            cout << "No input found." << endl;
+            break;
         }
-        return false;
     }
-    int sToInt(string inp){
-        int ret = 0;
-        int dec = 1;
-        for (int q = inp.length()-1; q > -1; q--){
-            char c = inp[q];
-            if (!(c >= 48 && c <= 57)){
-                return -1;
-            } else {
-                ret += dec*(((int)c)-48);
-            }
-            dec *= 10;
-        }
-        return ret;
+    cout << "Number of Patient Requests : " << n << endl;
+    cout << "Number of Patients :  " << p << endl;
+    cout << "Number of Worker Threads : " << w << endl;
+    cout << "Capacity of Request Buffer : " << b << endl;
+    cout << "Capacity of Message Buffer : " << m << endl;
+
+    srand(time_t(NULL));
+
+    int pid = fork();
+    if (pid == 0)
+    {
+        // modify this to pass along m
+        execl("server", "server", (char *)NULL);
     }
-    // Given a string, return true or false if the string is an acceptable input for ipv4. 
-    bool isIP4(string inp){
-        // Check witihn range of 0,255
-        if ( inp == "0" ){
-            return true;
-        }
-        
-        /*
-        if (atoi(inp) > 1 && atoi(inp) < 256 && noLeadIP4(inp)){
-            return true;
-        }
-        // Atoi doesn't work
-        */
-        if (sToInt(inp) >= 1 && sToInt(inp) <= 255 && noLeadIP4(inp)){
-            return true;
-        }
-        return false;
+
+    FIFORequestChannel *chan = new FIFORequestChannel("control", FIFORequestChannel::CLIENT_SIDE);
+    BoundedBuffer request_buffer(b);
+    HistogramCollection hc;
+
+    for (int q = 0; q < p; q++)
+    {
+        Histogram *h = new Histogram(10, -2.0, 2.0);
+        hc.add(h);
     }
-    // Given a string, return true if there's no leading zeroes, false otherwise.
-    bool noLeadIP4(string inp){
-        int cnt = 0;
-        for (int q = 0; q <inp.length();q ++){
-            if( inp.substr(q,1) == "0" ){
-                cnt++;
-            } else {
-                q = inp.length();
-            }
-        }
-        if (cnt > 0){
-            return false; // There's leading zeroes
-        }
-        return true;
+
+    // Make worker channels
+    FIFORequestChannel *wchans[p];
+    for (int q = 0; q < p; q++)
+    {
+        wchans[q] = create_new_channel(chan);
     }
-    // Given a string, return true or false if the string is an acceptable input for ipv6.
-    bool isIP6(string inp){
-        if (inp.size() > 4 || inp.size() < 1){
-            return false;
-        }
-        bool c1,c2,c3;
-        for (int q = 0; q < inp.size(); q++){
-            c1 = false;
-            c2 = false;
-            c3 = false;
-            char c = inp[q];
-            if ( c >= '0' && c <= '9'){
-                c1 = true;
-            }
-            if ( c >= 'A' && c <= 'F'){
-                c2 = true;
-            }
-            if ( c >= 'a' && c <= 'f'){
-                c3 = true;
-            }
-            if (!(c1||c2||c3)){
-                return false;
-            }
-        }
-        return true;
+
+    struct timeval start, end;
+    gettimeofday(&start, 0);
+
+    /* Start all threads here */
+    thread patient[p];
+    for (int q = 0; q < p; q++)
+    {
+        patient[q] = thread(patient_thread_function, n, q + 1, wchans[q], &hc);
     }
-    string validIPAddress(string IP) {
-        // "IPv4";
-        if (stringIn(IP,".")){
-            vector<string> vStr1 = splitter(IP,".");
-            for (int q = 0; q < vStr1.size(); q++){
-                if (!isIP4(vStr1[q]) || vStr1.size() != 4){
-                    return "Neither";
-                }
-            }
-            return "IPv4";
-        } 
-        // "IPv6" Goes from 0-9 and a-f inclusive;
-        if (stringIn(IP,":")){
-            vector<string> vStr1 = splitter(IP,":");
-            for (int q = 0; q < vStr1.size(); q++){
-                if (!isIP6(vStr1[q]) || vStr1.size() != 8 ){
-                    return "Neither";
-                }
-            }
-            return "IPv6";
-        }
-        // "Neither";
-        return "Neither";
+
+    /* Join all threads here */
+    for (intq = 0; q < p; q++)
+    {
+        patient[q].join();
     }
-};
+    gettimeofday(&end, 0);
+    // print the results
+    hc.print();
+    int secs = (end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) / (int)1e6;
+    int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
+    cout << "Took " << secs << " seconds and " << usecs << " micro seconds" << endl;
+
+    MESSAGE_TYPE q = QUIT_MSG;
+    chan->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
+    cout << "All Done!!!" << endl;
+    delete chan;
+}
