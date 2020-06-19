@@ -47,7 +47,7 @@ public:
 		// TBD
 		// vid2 start
 		unique_lock<mutex> l(m);
-		slot_availible.wait(l,[this]{q.size() < cap;}); // To make sure the queue size is proper, we can only push when queue size is less than capacity, good conditions.
+		slot_availible.wait(l,[this]{return (q.size() < cap);}); // To make sure the queue size is proper, we can only push when queue size is less than capacity, good conditions.
 		
 		// 0 can also be done here.
 		//2. Then push the vector at the end of the queue, but not so quickly. Watch out for race condition.
