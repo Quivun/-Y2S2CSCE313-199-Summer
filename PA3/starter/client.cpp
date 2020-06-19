@@ -18,7 +18,7 @@ FIFORequestChannel *create_new_channel(FIFORequestChannel *mainchan)
     int bufferSize = 1024;
     char name[bufferSize];
     MESSAGE_TYPE m = NEWCHANNEL_MSG;
-    mainchan->cwrite(&m sizeof(m));
+    mainchan->cwrite(&m, sizeof(m));
     mainchan->cread(name, bufferSize);
     FIFORequestChannel *newchan = new FIFORequestChannel(name, FIFORequestChannel::CLIENT_SIDE);
     return newchan;
