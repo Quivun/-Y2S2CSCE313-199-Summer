@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     struct timeval start, end;
     gettimeofday(&start, 0);
 
-    cout << "Beginning thread creation" << endl;
+    cout << endl << "Beginning thread creation" << endl;
     /* Start all threads here */
     cout << "Patient start..." << endl;
     thread patient[p];
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
     }
     cout << "Workers complete!" << endl;
     /* Join all threads here */
-    cout << "Joining threads" << endl;
+    cout << endl <<  "Joining threads" << endl;
     cout << "Patient start..." << endl;
 
     for (int q = 0; q < p; q++)
@@ -186,6 +186,7 @@ int main(int argc, char *argv[])
 
     for (int q = 0; q < w; q++)
     {
+        cout << q << endl;
         workers[q].join();
     }
     cout << "Workers complete!" << endl;
