@@ -64,7 +64,6 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
         else if (*m == FILE_MSG)
         {
             // TBD File Message
-            ;
         }
         else if (*m == QUIT_MSG)
         {
@@ -151,7 +150,9 @@ int main(int argc, char *argv[])
     struct timeval start, end;
     gettimeofday(&start, 0);
 
-    cout << endl << "Beginning thread creation" << endl;
+    cout << endl
+         << "Beginning thread creation" << endl;
+
     /* Start all threads here */
     cout << "Patient start..." << endl;
     thread patient[p];
@@ -168,8 +169,10 @@ int main(int argc, char *argv[])
         workers[q] = thread(worker_thread_function, wchans[q], &request_buffer, &hc);
     }
     cout << "Workers complete!" << endl;
+
     /* Join all threads here */
-    cout << endl <<  "Joining threads" << endl;
+    cout << endl
+         << "Joining threads" << endl;
     cout << "Patient start..." << endl;
 
     for (int q = 0; q < p; q++)
@@ -178,9 +181,10 @@ int main(int argc, char *argv[])
     }
     cout << "Patient complete!" << endl;
     // They will now see the quit message.
-    for (int q = 0; q < w; q++){
+    for (int q = 0; q < w; q++)
+    {
         MESSAGE_TYPE quit = QUIT_MSG;
-        request_buffer.push((char*) &quit, sizeof(quit));
+        request_buffer.push((char *)&quit, sizeof(quit));
     }
     cout << "Workers start..." << endl;
 
