@@ -177,6 +177,11 @@ int main(int argc, char *argv[])
         patient[q].join();
     }
     cout << "Patient complete!" << endl;
+    // They will now see the quit message.
+    for (int q = 0; q < w; q++){
+        MESSAGE_TYPE quit = QUIT_MSG;
+        request_buffer((char*) &quit, sizeof(quit));
+    }
     cout << "Workers start..." << endl;
 
     for (int q = 0; q < p; q++)
@@ -187,10 +192,12 @@ int main(int argc, char *argv[])
 
     gettimeofday(&end, 0);
     // print the results
-    cout << endl << endl;
+    cout << endl
+         << endl;
     hc.print();
     timediff(start, end);
-cout << endl << endl;
+    cout << endl
+         << endl;
     /*
     int secs = (end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) / (int)1e6;
     int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
