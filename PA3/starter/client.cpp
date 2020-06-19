@@ -136,6 +136,14 @@ int main(int argc, char *argv[])
     int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
     cout << "Took " << secs << " seconds and " << usecs << " micro seconds" << endl;
 
+    // Cleaning up the worker channels
+    for (int q = 0; q < p; q++)
+    {
+        MESSAGE_TYPE q = QUIT_MSG;
+        wchan[q]->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
+        delete wchan[q];
+    }
+    // Cleaning up the main channel
     MESSAGE_TYPE q = QUIT_MSG;
     chan->cwrite((char *)&q, sizeof(MESSAGE_TYPE));
     cout << "All Done!!!" << endl;

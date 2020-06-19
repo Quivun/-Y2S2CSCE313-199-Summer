@@ -5,6 +5,8 @@
 #include <queue>
 #include <string>
 #include <pthread.h>
+#include <thread>
+#include <mutex>
 
 using namespace std;
 
@@ -19,10 +21,11 @@ private:
 	While this would work, it is clearly more tedious */
 
 	// add necessary synchronization variables and data structures 
-
+	mutex m; // Push function is now doable with mutex
 
 public:
 	BoundedBuffer(int _cap){
+		cap = _cap;
 
 	}
 	~BoundedBuffer(){
@@ -31,15 +34,25 @@ public:
 
 	void push(char* data, int len){
 		//1. Wait until there is room in the queue (i.e., queue lengh is less than cap)
+		// Must be sleeping until there's room here.
+		// TBD
 		//2. Convert the incoming byte sequence given by data and len into a vector<char>
-		//3. Then push the vector at the end of the queue
+		vector<char> d (data, data+len); // Makes a vector of char
+		//3. Then push the vector at the end of the queue, but not so quickly. Watch out for race condition.
+		m.lock(); // Watches for race condition.
+		q.push(d);
+		m.unlock(); 
+		//4. Wake up pop() threads
+
 	}
 
 	int pop(char* buf, int bufcap){
-		//1. Wait until the queue has at least 1 item
+		//1. Wait until the queue has at least 1 item if there's nothing then suspend the thread until there's something to pop.
+		// Don't exceed the capacity of the buffer.
 		//2. pop the front item of the queue. The popped item is a vector<char>
 		//3. Convert the popped vector<char> into a char*, copy that into buf, make sure that vector<char>'s length is <= bufcap
 		//4. Return the vector's length to the caller so that he knows many bytes were popped
+		//5. Wake up any potentially sleeping push() functions.
 	}
 };
 
