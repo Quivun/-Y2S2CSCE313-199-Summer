@@ -5,7 +5,7 @@
 #include "HistogramCollection.h"
 #include "FIFOreqchannel.h"
 #include <time.h>
-#include <thread>
+#include <pthread.h>
 using namespace std;
 
 void timediff(struct timeval &start, struct timeval &end)
