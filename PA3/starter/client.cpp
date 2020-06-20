@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
     thread workers[w];
     for (int q = 0; q < w; q++)
     {
-        workers[q] = thread(workers_thread_function, wchans[q], &request_buffer, &hc);
+        workers[q] = thread(workers_thread_function, wchans[q], &request_buffer, &hc, m);
     }
     cout << "Workers complete!" << endl;
 
