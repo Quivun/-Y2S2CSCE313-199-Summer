@@ -47,7 +47,6 @@ void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request
 
 void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buffer, HistogramCollection *hc)
 {
-    cout << "WorkThreadFunc_Start" << endl;
     int bufferSize = 1024;
     char buf[bufferSize];
     double resp = 0;
@@ -79,7 +78,6 @@ void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_bu
             break;
         }
     }
-    cout << "WorkThreadFunc_End" << endl;
     /*
 		Functionality of the workers threads	
     */
@@ -146,7 +144,7 @@ int main(int argc, char *argv[])
     }
 
     // Make workers channels
-    cout << "Making workers channels" << endl;
+    cout << "Making Workers channels" << endl;
     FIFORequestChannel *wchans[w];
     for (int q = 0; q < w; q++)
     {
@@ -168,13 +166,13 @@ int main(int argc, char *argv[])
     }
     // Remember the patient threads are pushing, the workers threads are popping.
     cout << "Patient complete!" << endl;
-    cout << "workers start..." << endl;
+    cout << "Workers start..." << endl;
     thread workers[w];
     for (int q = 0; q < w; q++)
     {
         workers[q] = thread(workers_thread_function, wchans[q], &request_buffer, &hc);
     }
-    cout << "workers complete!" << endl;
+    cout << "Workers complete!" << endl;
 
     /* Join all threads here */
     cout << endl
@@ -196,14 +194,14 @@ int main(int argc, char *argv[])
     }
     cout << "Sending Quit Test End" << endl;
     //
-    cout << "workers start..." << endl;
+    cout << "Workers start..." << endl;
 
     for (int q = 0; q < w; q++)
     {
         cout << q << endl;
         workers[q].join();
     }
-    cout << "workers complete!" << endl;
+    cout << "Workers complete!" << endl;
 
     gettimeofday(&end, 0);
     // print the results
