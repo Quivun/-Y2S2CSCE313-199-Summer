@@ -150,7 +150,6 @@ void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFOReque
 }
 int main(int argc, char *argv[])
 {
-    cout << "For patient threads to run, you must specify the number of patients of the given amount (Refer to handout) and the same goes for the file thread. They both can run at the same time if need be" << endl;
     int opt;
     int n = 15000;       //default number of requests per "patient"
     int p = 1;           // number of patients [1,15]
@@ -183,7 +182,7 @@ int main(int argc, char *argv[])
             m = atoi(optarg);
             break;
         case 'f':
-            fname = atoi(optarg);
+            fname = optarg;
             fflag = true;
             break;
         case '?':
