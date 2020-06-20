@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
             break;
         case 'm':
             mm = optarg;
-            m = atoi(mm);
+            m = stoi(mm);
 
             break;
         case 'f':
