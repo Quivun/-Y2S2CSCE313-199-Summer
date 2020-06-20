@@ -5,7 +5,7 @@
 #include "HistogramCollection.h"
 #include "FIFOreqchannel.h"
 #include <time.h>
-#include <pthread.h>
+#include <thread>
 using namespace std;
 
 void timediff(struct timeval &start, struct timeval &end)
@@ -54,7 +54,7 @@ void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_bu
     {
         request_buffer->pop(buf, bufferSize);
         MESSAGE_TYPE *m = (MESSAGE_TYPE *)buf;
-        if (*m = DATA_MSG)
+        if (*m == DATA_MSG)
         {
             cout << "Data" << endl;
             // Send to data channel
