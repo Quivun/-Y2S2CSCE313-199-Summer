@@ -18,4 +18,4 @@ server: server.cpp  FIFOreqchannel.o common.o
 	g++ -g -w -std=c++11 -o server server.cpp FIFOreqchannel.o common.o -lpthread -lrt
 
 clean:
-	rm -rf *.o fifo* server client 
+	rm -rf *.o fifo* server client fifo_data*_*
