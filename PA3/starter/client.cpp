@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     int w = 200;         //default number of workers threads
     int b = 500;         // default capacity of the request buffer, you should change this default
     int m = MAX_MESSAGE; // default capacity of the message buffer
-    string fname = "";
+    string fname = "1.csv";
     bool pflag = false;
     bool fflag = false;
     srand(time_t(NULL));
