@@ -227,7 +227,6 @@ int main(int argc, char *argv[])
          << "Beginning thread creation" << endl;
 
     /* Start all threads here */
-    /*
     cout << "Patient start..." << endl;
     thread patient[p];
     for (int q = 0; q < p; q++)
@@ -236,7 +235,7 @@ int main(int argc, char *argv[])
     }
     // Remember the patient threads are pushing, the workers threads are popping.
     cout << "Patient complete!" << endl;
-    */
+    
     cout << "FileThreads start... "<< endl;
     thread filethread(file_thread_function, fname, &request_buffer, chan, m);
     cout << "FileThreads complete!" << endl;
@@ -251,7 +250,7 @@ int main(int argc, char *argv[])
     /* Join all threads here */
     cout << endl
          << "Joining threads" << endl;
-    /*
+    
     cout << "Patient start..." << endl;
 
     for (int q = 0; q < p; q++)
@@ -259,9 +258,9 @@ int main(int argc, char *argv[])
         patient[q].join();
     }
     cout << "Patient complete!" << endl;
-    */
-   filethread.join();
-   cout << "Patient threads/file thread finished" << endl;
+    
+    filethread.join();
+    cout << "Patient threads/file thread finished" << endl;
     // They will now see the quit message.
     cout << "Sending Quit messages : Start" << endl;
     for (int q = 0; q < w; q++)
@@ -283,7 +282,9 @@ int main(int argc, char *argv[])
     // print the results
     cout << endl
          << endl;
+    if (n > 0){
     hc.print();
+    }
     timediff(start, end);
     cout << endl
          << endl;
