@@ -188,11 +188,13 @@ int main(int argc, char *argv[])
     }
     cout << "Patient complete!" << endl;
     // They will now see the quit message.
+    cout << "Sending Quit Test" << endl;
     for (int q = 0; q < w; q++)
     {
         MESSAGE_TYPE quit = QUIT_MSG;
         request_buffer.push((char *)&quit, sizeof(quit));
     }
+    cout << "Test Quit End" << endl;
     //
     cout << "Workers start..." << endl;
 
