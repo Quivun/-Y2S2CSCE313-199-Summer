@@ -200,14 +200,20 @@ int main(int argc, char *argv[])
     cout << "Capacity of Request Buffer : " << b << endl;
     cout << "Capacity of Message Buffer : " << m << endl;
     cout << "File requested : " << fname << endl;
-    if (pflag){
+    if (pflag)
+    {
         cout << "Patients confirmed, will run patient threads." << endl;
-    } else {
+    }
+    else
+    {
         cout << "No patients specified, will not run patient threads." << endl;
     }
-    if (fflag){
+    if (fflag)
+    {
         cout << "File specified. Will run file threads." << endl;
-    } else {
+    }
+    else
+    {
         cout << "No file specified, will not run file threads." << endl;
     }
     int pid = fork();
@@ -242,20 +248,22 @@ int main(int argc, char *argv[])
          << "Beginning thread creation" << endl;
 
     /* Start all threads here */
-    if (pflag){
-    cout << "Patient start..." << endl;
-    thread patient[p];
-    for (int q = 0; q < p; q++)
+    if (pflag)
     {
-        patient[q] = thread(patient_thread_function, n, q + 1, &request_buffer);
+        cout << "Patient start..." << endl;
+        thread patient[p];
+        for (int q = 0; q < p; q++)
+        {
+            patient[q] = thread(patient_thread_function, n, q + 1, &request_buffer);
+        }
+        // Remember the patient threads are pushing, the workers threads are popping.
+        cout << "Patient complete!" << endl;
     }
-    // Remember the patient threads are pushing, the workers threads are popping.
-    cout << "Patient complete!" << endl;
-    }
-    if (fflag){
-    cout << "FileThreads start... " << endl;
-    thread filethread(file_thread_function, fname, &request_buffer, chan, m);
-    cout << "FileThreads complete!" << endl;
+    if (fflag)
+    {
+        cout << "FileThreads start... " << endl;
+        thread filethread(file_thread_function, fname, &request_buffer, chan, m);
+        cout << "FileThreads complete!" << endl;
     }
     cout << "Workers start..." << endl;
     thread workers[w];
@@ -268,20 +276,29 @@ int main(int argc, char *argv[])
     /* Join all threads here */
     cout << endl
          << "Joining threads" << endl;
-if (pflag){
 
-    cout << "Patient start..." << endl;
-
-    for (int q = 0; q < p; q++)
+    try
     {
-        patient[q].join();
+        if (pflag)
+        {
+
+            cout << "Patient start..." << endl;
+
+            for (int q = 0; q < p; q++)
+            {
+                patient[q].join();
+            }
+            cout << "Patient complete!" << endl;
+        }
     }
-    cout << "Patient complete!" << endl;
-}
-if (fflag){
-    filethread.join();
-    cout << "Patient threads/file thread finished" << endl;
-}
+    try
+    {
+        if (fflag)
+        {
+            filethread.join();
+            cout << "Patient threads/file thread finished" << endl;
+        }
+    }
     // They will now see the quit message.
     cout << "Sending Quit messages : Start" << endl;
     for (int q = 0; q < w; q++)
