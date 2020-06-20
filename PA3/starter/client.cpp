@@ -150,6 +150,7 @@ void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFOReque
 }
 int main(int argc, char *argv[])
 {
+    cout << "For patient threads to run, you must specify the number of patients of the given amount (Refer to handout) and the same goes for the file thread. They both can run at the same time if need be" << endl;
     int opt;
     int n = 15000;       //default number of requests per "patient"
     int p = 1;           // number of patients [1,15]
@@ -157,6 +158,8 @@ int main(int argc, char *argv[])
     int b = 500;         // default capacity of the request buffer, you should change this default
     int m = MAX_MESSAGE; // default capacity of the message buffer
     string fname = "10.csv";
+    bool pflag = false;
+    bool fflag = false;
     srand(time_t(NULL));
 
     while ((opt = getopt(argc, argv, "n:p:w:b:m:f:")) != -1)
@@ -168,6 +171,7 @@ int main(int argc, char *argv[])
             break;
         case 'p':
             p = atoi(optarg);
+            pflag = true;
             break;
         case 'w':
             w = atoi(optarg);
@@ -180,6 +184,7 @@ int main(int argc, char *argv[])
             break;
         case 'f':
             fname = atoi(optarg);
+            fflag = true;
             break;
         case '?':
             cout << "Incorrect input detected." << endl;
@@ -195,6 +200,16 @@ int main(int argc, char *argv[])
     cout << "Capacity of Request Buffer : " << b << endl;
     cout << "Capacity of Message Buffer : " << m << endl;
     cout << "File requested : " << fname << endl;
+    if (pflag){
+        cout << "Patients confirmed, will run patient threads." << endl;
+    } else {
+        cout << "No patients specified, will not run patient threads." << endl;
+    }
+    if (fflag){
+        cout << "File specified. Will run file threads." << endl;
+    } else {
+        cout << "No file specified, will not run file threads." << endl;
+    }
     int pid = fork();
     if (pid == 0)
     {
@@ -227,6 +242,7 @@ int main(int argc, char *argv[])
          << "Beginning thread creation" << endl;
 
     /* Start all threads here */
+    if (pflag){
     cout << "Patient start..." << endl;
     thread patient[p];
     for (int q = 0; q < p; q++)
@@ -235,10 +251,12 @@ int main(int argc, char *argv[])
     }
     // Remember the patient threads are pushing, the workers threads are popping.
     cout << "Patient complete!" << endl;
-
+    }
+    if (fflag){
     cout << "FileThreads start... " << endl;
     thread filethread(file_thread_function, fname, &request_buffer, chan, m);
     cout << "FileThreads complete!" << endl;
+    }
     cout << "Workers start..." << endl;
     thread workers[w];
     for (int q = 0; q < w; q++)
@@ -250,6 +268,7 @@ int main(int argc, char *argv[])
     /* Join all threads here */
     cout << endl
          << "Joining threads" << endl;
+if (pflag){
 
     cout << "Patient start..." << endl;
 
@@ -258,9 +277,11 @@ int main(int argc, char *argv[])
         patient[q].join();
     }
     cout << "Patient complete!" << endl;
-
+}
+if (fflag){
     filethread.join();
     cout << "Patient threads/file thread finished" << endl;
+}
     // They will now see the quit message.
     cout << "Sending Quit messages : Start" << endl;
     for (int q = 0; q < w; q++)
@@ -282,29 +303,14 @@ int main(int argc, char *argv[])
     // print the results
     cout << endl
          << endl;
-    if (n > 0)
+    if (pflag)
     {
         hc.print();
     }
     timediff(start, end);
     cout << endl
          << endl;
-    /*
-    int secs = (end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) / (int)1e6;
-    int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
-    cout << "Took " << secs << " seconds and " << usecs << " micro seconds" << endl;
-    */
 
-    // Cleaning up the workers channels
-    /*
-    for (int q = 0; q < w; q++)
-    {
-        MESSAGE_TYPE quit = QUIT_MSG;
-        wchans[q]->cwrite((char *)&quit, sizeof(MESSAGE_TYPE));
-        delete wchans[q];
-    }
-    // Done so within the workers thread function via quit message.
-    */
     // Cleaning up the main channel
     cout << "Deleting main channel" << endl;
     MESSAGE_TYPE quit = QUIT_MSG;
