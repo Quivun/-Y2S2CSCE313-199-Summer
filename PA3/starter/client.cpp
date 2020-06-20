@@ -53,7 +53,7 @@ void worker_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buf
     double resp = 0;
     while (true)
     {
-        request_buffer->pop(buf, bufferSize);
+        request_buffer->pop(buf, 1024);
         MESSAGE_TYPE *m = (MESSAGE_TYPE *)buf;
         if (*m = DATA_MSG)
         {
