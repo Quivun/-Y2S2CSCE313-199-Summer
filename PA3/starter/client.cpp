@@ -249,8 +249,6 @@ int main(int argc, char *argv[])
          << "Beginning thread creation" << endl;
 
     /* Start all threads here */
-    thread patient[1];
-
         cout << "Patient start..." << endl;
         thread patient[p];
         for (int q = 0; q < p; q++)
@@ -260,7 +258,6 @@ int main(int argc, char *argv[])
         // Remember the patient threads are pushing, the workers threads are popping.
         cout << "Patient complete!" << endl;
 
-    thread filethread;
 
         cout << "FileThreads start... " << endl;
         thread filethread(file_thread_function, fname, &request_buffer, chan, m);
