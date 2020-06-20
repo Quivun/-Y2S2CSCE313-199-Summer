@@ -12,6 +12,7 @@ Histogram::Histogram(int _nbins, double _start, double _end): nbins (_nbins), st
 Histogram::~Histogram(){
 }
 void Histogram::update (double value){
+	// To allow more things to happen simultaneously, we don't need to lock or secure the top portion.
 	int bin_index = (int) ((value - start) / (end - start) * nbins);
 	if (bin_index <0)
 		bin_index= 0;
@@ -19,7 +20,9 @@ void Histogram::update (double value){
 		bin_index = nbins-1;
 
 	//cout << value << "-" << bin_index << endl;
+	m.lock();
 	hist [bin_index] ++;
+	m.unlock();
 }
 vector<int> Histogram::get_hist(){
 	return hist;
