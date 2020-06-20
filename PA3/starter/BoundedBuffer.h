@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <queue>
 #include <string>
-#include <thread>
 #include <mutex>
 #include <assert.h>
 #include <vector>
