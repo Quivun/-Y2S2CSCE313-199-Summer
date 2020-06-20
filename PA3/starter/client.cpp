@@ -124,13 +124,12 @@ void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFOReque
 {
     // 1. Create the file
     string recievedFname = "recv/" + fname;
-    FILE *fp = fopen(recievedFname.c_str(), "w");
     // Pre allocate the length of the file to make it as long as the original length
     int bufferSize = 1024;
     char buf[bufferSize];
     filemsg f(0, 0);
     memcpy(buf, &f, sizeof(f));
-    strcpy(buf + sizeof(f), fname.c_stry());
+    strcpy(buf + sizeof(f), fname.c_str());
     chan->cwrite(buf, sizeof(f) + fname.size() + 1); // Sends message to server
     __int64_t filelength;
     chan->cread(&filelength, sizeof(filelength));
@@ -238,7 +237,7 @@ int main(int argc, char *argv[])
     // Remember the patient threads are pushing, the workers threads are popping.
     cout << "Patient complete!" << endl;
     */
-    cout << "FileThreads start... " endl;
+    cout << "FileThreads start... "<< endl;
     thread filethread(file_thread_function, fname, &request_buffer, chan, m);
     cout << "FileThreads complete!" << endl;
     cout << "Workers start..." << endl;
