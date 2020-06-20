@@ -45,11 +45,12 @@ void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request
     }
 }
 
-void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buffer, HistogramCollection *hc)
+void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_buffer, HistogramCollection *hc, int bufCap)
 {
     int bufferSize = 1024;
     char buf[bufferSize];
     double resp = 0;
+    char recievedBuf[bufCap];
     while (true)
     {
         request_buffer->pop(buf, bufferSize);
@@ -61,10 +62,6 @@ void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_bu
             chan->cread(&resp, sizeof(double));
             hc->update(((datamsg *)buf)->person, resp);
         }
-        else if (*m == FILE_MSG)
-        {
-            // TBD File Message
-        }
         else if (*m == QUIT_MSG)
         {
             // Send quit
@@ -74,12 +71,85 @@ void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_bu
             // Because of this we don't need to cleanup within the main.
             break;
         }
+        else if (*m == FILE_MSG)
+        {
+            filemsg *fm = (filemsg *)buf;
+            string fname = (char *)(fm + 1);
+            int sz = sizeof(filemsg) + fname.size() + 1; // Rather than just sizeof, it requires the size also
+            chan->cwrite(buf, sz);
+            chan->cread(recievedBuf, bufCap);
+            // TBD File Message
+            string recievedFname = "recv/" + fname;
+            FILE *fp = fopen(recievedFname.c_str(), "r+");
+            // r+ mode so the system knows to open the file as both read and write mode. Won't destroy existing content of the file so we can navigate to a specified index. PreReq is that the file is expected to be there. We can sometimes get the files out of order. Self Question : Demux it to order it?
+            fseek(fp, fm->offset, SEEK_SET);
+            fwrite(recievedBuf, 1, fm->length, fp);
+            fclose(fp);
+        }
     }
     /*
 		Functionality of the workers threads	
     */
 }
 
+/* // naiveSol
+void file_thread_function(FIFORequestChannel* chan, string fname, int m, BoundedBuffer* request_buffer){
+    filemsg f(0,0);
+    char buf[1000];
+    memcpy (buf, &f, sizeof (f));
+    strcpy(buf + sizeof(filemsg) + fname.size() +1 );
+    __int64_t len;
+    chan->cread(&len, sizeof(__int64_t));
+    //Create the file and preallocate it to the desired length
+    string recfilename = "recv/" + fname;
+    cout << "Going to create a file" << recfilename << " of length " << len << endl;
+    int ret = truncate (recfilename.c_str(), len);
+    if (ret < 0){
+        perror ("Truncate Error : ");
+        exit(0);
+    }
+    filemsg* fm = (filemsg* ) buf;
+    __int64_t remlen = len;
+    while (remlen > 0){
+        fm->length = min (remlen, (__int64_t) m );
+        //chan->cwrite (buf, sizeof (filemsg) + fname.size() + 1);
+        // chan->cread (recvbuf, m);
+        request_buffer->push(buf,sizeof(filemsg) + fname.size() + 1);
+        fm -> offset += fm-> length;
+        remlen -= fm->length;
+    }
+}
+*/
+void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFORequestChannel *chan)
+{
+    // 1. Create the file
+    string recievedFname = "recv/" + fname;
+    FILE *fp = fopen(recievedFname.c_str(), "w");
+    // Pre allocate the length of the file to make it as long as the original length
+    int bufferSize = 1024;
+    char buf[bufferSize];
+    filemsg f(0, 0);
+    memcpy(buf, &f, sizeof(f));
+    strcpy(buf + sizeof(f), fname.c_stry());
+    chan->cwrite(buf, sizeof(f) + fname.size() + 1); // Sends message to server
+    __int64_t filelength;
+    chan->cread(&filelength, sizeof(filelength));
+
+    FILE *fp = fopen(recievedFname.c_str(), "w");
+    fseek(fp, filelength, SEEK_SET);
+    fclose(fp);
+    // 2. Generate all the file messages
+    filemsg *fm = (filemsg *)buf;
+    __int64_t remlen = len;
+    while (remlen > 0)
+    {
+        fm->length = min(remlen, (__int64_t)m);
+        request_buffer->push(buf, sizeof(filemsg) + fname.size() + 1);
+        fm->offset += fm->length;
+        remlen -= fm->length;
+    }
+
+}
 int main(int argc, char *argv[])
 {
     int opt;
@@ -178,7 +248,6 @@ int main(int argc, char *argv[])
 
     for (int q = 0; q < p; q++)
     {
-        cout << q << endl;
         patient[q].join();
     }
     cout << "Patient complete!" << endl;
@@ -195,7 +264,6 @@ int main(int argc, char *argv[])
 
     for (int q = 0; q < w; q++)
     {
-        cout << q << endl;
         workers[q].join();
     }
     cout << "Workers complete!" << endl;
