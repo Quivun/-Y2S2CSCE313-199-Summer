@@ -56,7 +56,6 @@ void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_bu
         MESSAGE_TYPE *m = (MESSAGE_TYPE *)buf;
         if (*m == DATA_MSG)
         {
-            cout << "Data" << endl;
             // Send to data channel
             chan->cwrite(buf, sizeof(datamsg));
             chan->cread(&resp, sizeof(double));
@@ -64,12 +63,10 @@ void workers_thread_function(FIFORequestChannel *chan, BoundedBuffer *request_bu
         }
         else if (*m == FILE_MSG)
         {
-            cout << "File" << endl;
             // TBD File Message
         }
         else if (*m == QUIT_MSG)
         {
-            cout << "Quit" << endl;
             // Send quit
             // chan->cwrite((char *)&m, sizeof(MESSAGE_TYPE));
             chan->cwrite(m, sizeof(MESSAGE_TYPE));
