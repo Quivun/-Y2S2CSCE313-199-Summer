@@ -120,7 +120,7 @@ void file_thread_function(FIFORequestChannel* chan, string fname, int m, Bounded
     }
 }
 */
-void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFORequestChannel *chan)
+void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFORequestChannel *chan, int bufCap)
 {
     // 1. Create the file
     string recievedFname = "recv/" + fname;
@@ -140,15 +140,14 @@ void file_thread_function(string fname, BoundedBuffer *request_buffer, FIFOReque
     fclose(fp);
     // 2. Generate all the file messages
     filemsg *fm = (filemsg *)buf;
-    __int64_t remlen = len;
+    __int64_t remlen = filelength;
     while (remlen > 0)
     {
-        fm->length = min(remlen, (__int64_t)m);
+        fm->length = min(remlen, (__int64_t)bufCap);
         request_buffer->push(buf, sizeof(filemsg) + fname.size() + 1);
         fm->offset += fm->length;
         remlen -= fm->length;
     }
-
 }
 int main(int argc, char *argv[])
 {
@@ -158,7 +157,10 @@ int main(int argc, char *argv[])
     int w = 200;         //default number of workers threads
     int b = 500;         // default capacity of the request buffer, you should change this default
     int m = MAX_MESSAGE; // default capacity of the message buffer
-    while ((opt = getopt(argc, argv, "n:p:w:b:m:")) != -1)
+    string fname = "10.csv";
+    srand(time_t(NULL));
+
+    while ((opt = getopt(argc, argv, "n:p:w:b:m:f:")) != -1)
     {
         switch (opt)
         {
@@ -177,6 +179,9 @@ int main(int argc, char *argv[])
         case 'm':
             m = atoi(optarg);
             break;
+        case 'f':
+            fname = atoi(optarg);
+            break;
         case '?':
             cout << "Incorrect input detected." << endl;
             break;
@@ -190,9 +195,7 @@ int main(int argc, char *argv[])
     cout << "Number of workers Threads : " << w << endl;
     cout << "Capacity of Request Buffer : " << b << endl;
     cout << "Capacity of Message Buffer : " << m << endl;
-
-    srand(time_t(NULL));
-
+    cout << "File requested : " << fname << endl;
     int pid = fork();
     if (pid == 0)
     {
@@ -225,6 +228,7 @@ int main(int argc, char *argv[])
          << "Beginning thread creation" << endl;
 
     /* Start all threads here */
+    /*
     cout << "Patient start..." << endl;
     thread patient[p];
     for (int q = 0; q < p; q++)
@@ -233,6 +237,10 @@ int main(int argc, char *argv[])
     }
     // Remember the patient threads are pushing, the workers threads are popping.
     cout << "Patient complete!" << endl;
+    */
+    cout << "FileThreads start... " endl;
+    thread filethread(file_thread_function, fname, &request_buffer, chan, m);
+    cout << "FileThreads complete!" << endl;
     cout << "Workers start..." << endl;
     thread workers[w];
     for (int q = 0; q < w; q++)
@@ -244,6 +252,7 @@ int main(int argc, char *argv[])
     /* Join all threads here */
     cout << endl
          << "Joining threads" << endl;
+    /*
     cout << "Patient start..." << endl;
 
     for (int q = 0; q < p; q++)
@@ -251,14 +260,17 @@ int main(int argc, char *argv[])
         patient[q].join();
     }
     cout << "Patient complete!" << endl;
+    */
+   filethread.join();
+   cout << "Patient threads/file thread finished" << endl;
     // They will now see the quit message.
-    cout << "Sending Quit Test Start" << endl;
+    cout << "Sending Quit messages : Start" << endl;
     for (int q = 0; q < w; q++)
     {
         MESSAGE_TYPE quit = QUIT_MSG;
         request_buffer.push((char *)&quit, sizeof(quit));
     }
-    cout << "Sending Quit Test End" << endl;
+    cout << "Sending Quit messages : End" << endl;
     //
     cout << "Workers start..." << endl;
 
