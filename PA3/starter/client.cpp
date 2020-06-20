@@ -156,6 +156,7 @@ int main(int argc, char *argv[])
     int w = 200;         //default number of workers threads
     int b = 500;         // default capacity of the request buffer, you should change this default
     int m = MAX_MESSAGE; // default capacity of the message buffer
+    string mm = to_string(MAX_MESSAGE);
     string fname = "1.csv";
     bool pflag = false;
     bool fflag = false;
@@ -180,6 +181,7 @@ int main(int argc, char *argv[])
             break;
         case 'm':
             m = atoi(optarg);
+            mm = optarg
             break;
         case 'f':
             fname = optarg;
@@ -220,7 +222,12 @@ int main(int argc, char *argv[])
     if (pid == 0)
     {
         // modify this to pass along m
-        execl("server", "server", (char *)NULL);
+        char *serverEntry = new char[mm.size() +1];
+        copy(mm.begin(),mm.end(),serverEntry);
+        serverEntry[mm.size()] = '\0';
+        
+        char *args[] = { "./server","m",serverEntry, NULL};
+        execvp(args[0], args);
     }
 
     FIFORequestChannel *chan = new FIFORequestChannel("control", FIFORequestChannel::CLIENT_SIDE);
