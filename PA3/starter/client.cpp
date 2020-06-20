@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
     cout << "Capacity of Request Buffer : " << b << endl;
     cout << "Capacity of Message Buffer : " << m << endl;
     cout << "File requested : " << fname << endl;
-    if (pflag)
+    /* if (pflag)
     {
         cout << "Patients confirmed, will run patient threads." << endl;
     }
@@ -216,6 +216,7 @@ int main(int argc, char *argv[])
     {
         cout << "No file specified, will not run file threads." << endl;
     }
+    */
     int pid = fork();
     if (pid == 0)
     {
@@ -249,8 +250,7 @@ int main(int argc, char *argv[])
 
     /* Start all threads here */
     thread patient[1];
-    if (pflag)
-    {
+
         cout << "Patient start..." << endl;
         thread patient[p];
         for (int q = 0; q < p; q++)
@@ -259,14 +259,13 @@ int main(int argc, char *argv[])
         }
         // Remember the patient threads are pushing, the workers threads are popping.
         cout << "Patient complete!" << endl;
-    }
+
     thread filethread;
-    if (fflag)
-    {
+
         cout << "FileThreads start... " << endl;
         thread filethread(file_thread_function, fname, &request_buffer, chan, m);
         cout << "FileThreads complete!" << endl;
-    }
+
     cout << "Workers start..." << endl;
     thread workers[w];
     for (int q = 0; q < w; q++)
@@ -278,8 +277,7 @@ int main(int argc, char *argv[])
     /* Join all threads here */
     cout << endl
          << "Joining threads" << endl;
-    if (pflag)
-    {
+
 
         cout << "Patient start..." << endl;
 
@@ -288,12 +286,11 @@ int main(int argc, char *argv[])
             patient[q].join();
         }
         cout << "Patient complete!" << endl;
-    }
-    if (fflag)
-    {
+
+
         filethread.join();
         cout << "Patient threads/file thread finished" << endl;
-    }
+    
     // They will now see the quit message.
     cout << "Sending Quit messages : Start" << endl;
     for (int q = 0; q < w; q++)
@@ -315,10 +312,9 @@ int main(int argc, char *argv[])
     // print the results
     cout << endl
          << endl;
-    if (pflag)
-    {
+
         hc.print();
-    }
+
     timediff(start, end);
     cout << endl
          << endl;
