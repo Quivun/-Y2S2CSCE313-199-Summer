@@ -21,7 +21,7 @@ private:
 
     int server(string port)
     {
-        
+
         struct addrinfo hints, *serv;
         struct sockaddr_storage theirAddress;
         socklen_t sin_size;
@@ -56,7 +56,7 @@ private:
     }
     int client(string host, string port)
     {
-        struct addrinto hints, *res;
+        struct addrinfo hints, *res;
 
         // loads up address struct with getaddrinfo();
         memset(&hints, 0, sizeof(hints));
