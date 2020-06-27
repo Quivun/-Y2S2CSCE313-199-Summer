@@ -13,7 +13,7 @@
 #include "FIFOreqchannel.h"
 using namespace std;
 
-/* 
+
 // Does not have to be here because the intent doesn't have to be sent to the server we want 
 void process_newchannel_request(TCPRequestChannel *_channel)
 {
@@ -29,7 +29,9 @@ void process_newchannel_request(TCPRequestChannel *_channel)
 }
 // We just need to call connect one more time from the client
 
-*/
+
+int bufCap;
+string port;
 
 void populate_file_data(int person)
 {
@@ -89,7 +91,8 @@ void process_file_request(TCPRequestChannel *rc, char *request)
     if (f.length > bufCap)
     {
         cerr << "Client is requesting a chunk bigger than server's capacity" << endl;
-        cerr << "Returning nothing (i.e."
+        cerr << "Returning nothing (i.e., 0 bytes) in response" << endl;
+        rc->cwrite(response,0);
     }
     FILE *fp = fopen(filename.c_str(), "rb");
     if (!fp)
@@ -191,7 +194,7 @@ int main(int argc, char *argv[])
 {
     bufCap = MAX_MESSAGE;
     int opt;
-    string port;
+    port = "";
     while ((opt = getopt(argc, argv, "m:r:")) != -1)
     {
         switch (opt)
@@ -207,7 +210,7 @@ int main(int argc, char *argv[])
     srand(time_t(NULL));
     for (int q = 0; q < NUM_PERSONS; q++)
     {
-        populate_file_data(i + 1);
+        populate_file_data(q + 1);
     }
 
     TCPRequestChannel *control_channel = new TCPRequestChannel("", port, TCPRequestChannel::SERVER_SIDE);
