@@ -13,7 +13,11 @@
 #include "FIFOreqchannel.h"
 using namespace std;
 
+vector<vector<string>> all_data;
 
+int bufCap;
+string port;
+/*
 // Does not have to be here because the intent doesn't have to be sent to the server we want 
 void process_newchannel_request(TCPRequestChannel *_channel)
 {
@@ -28,10 +32,8 @@ void process_newchannel_request(TCPRequestChannel *_channel)
     thread_for_client.detach();
 }
 // We just need to call connect one more time from the client
+*/
 
-
-int bufCap;
-string port;
 
 void populate_file_data(int person)
 {
@@ -62,7 +64,7 @@ double get_data_from_memory(int person, double seconds, int ecgno)
     vector<string> parts = split(line, ',');
     double sec = stod(parts[0]);
     double ecg1 = stod(part[1]);
-    double ecg = stod(parts[2]);
+    double ecg2 = stod(parts[2]);
     if (ecgno == 1)
     {
         return ecg1;
@@ -133,7 +135,7 @@ int process_request(TCPRequestChannel *rc, char *_request)
     }
     else if (m == NEWCHANNEL_MSG)
     {
-        process_newchannel_request(rc);
+        // process_newchannel_request(rc);
     }
     else
     {
