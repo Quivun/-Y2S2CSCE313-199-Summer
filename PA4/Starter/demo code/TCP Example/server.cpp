@@ -14,7 +14,6 @@
 using namespace std;
 
 vector<vector<string>> all_data;
-
 int bufCap;
 string port;
 /*
@@ -63,7 +62,7 @@ double get_data_from_memory(int person, double seconds, int ecgno)
     string line = all_data[person - 1][index];
     vector<string> parts = split(line, ',');
     double sec = stod(parts[0]);
-    double ecg1 = stod(part[1]);
+    double ecg1 = stod(parts[1]);
     double ecg2 = stod(parts[2]);
     if (ecgno == 1)
     {
@@ -79,6 +78,7 @@ void process_file_request(TCPRequestChannel *rc, char *request)
 {
     filemsg f = *(filemsg *)request;
     string filename = request + sizeof(filemsg);
+    char *buffer = new char[bufCap];
     filename = "BIMDC/" + filename; // adding path prefix to request file name
     // cout << "Server received request for file " << filename << endl;
     if (f.offset == 0 && f.length == 0)
@@ -209,6 +209,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
+    char * buffer = new char
     srand(time_t(NULL));
     for (int q = 0; q < NUM_PERSONS; q++)
     {
