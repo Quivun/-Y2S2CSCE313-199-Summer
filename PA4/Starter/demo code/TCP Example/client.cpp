@@ -195,8 +195,10 @@ int main(int argc, char *argv[])
 			break;
 		case 'h':
 			host = optarg;
+			break;
 		case 'r':
 			port = optarg;
+			break;
 		case '?':
 			cout << "Incorrect input detected." << endl;
 			break;
