@@ -13,7 +13,6 @@
 #include "FIFOreqchannel.h"
 using namespace std;
 
-vector<vector<string>> all_data;
 int bufCap;
 string port;
 
@@ -22,7 +21,6 @@ char* buffer = NULL; // buffer used by the server, allocated in the main
 
 int nchannels = 0;
 pthread_mutex_t newchannel_lock;
-void handle_process_loop(FIFORequestChannel *_channel);
 char ival;
 vector<string> all_data [NUM_PERSONS];
 
