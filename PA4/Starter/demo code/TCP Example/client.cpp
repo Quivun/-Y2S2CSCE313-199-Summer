@@ -24,7 +24,7 @@ TCPRequestChannel *create_new_channel(TCPRequestChannel *mainchan)
 	MESSAGE_TYPE m = NEWCHANNEL_MSG;
 	mainchan->cwrite(&m, sizeof(m));
 	mainchan->cread(name, bufferSize);
-	TCPRequestChannel *newchan = new TCPRequestChannel(name, TCPRequestChannel::CLIENT_SIDE);
+	TCPRequestChannel *newchan = new TCPRequestChannel(name, FIFORequestChannel::CLIENT_SIDE);
 	return newchan;
 }
 void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request_buffer)
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
         execvp(args[0], args);
     }
 */
-	TCPRequestChannel *chan = new TCPRequestChannel(host,port, TCPRequestChannel::CLIENT_SIDE);
+	TCPRequestChannel *chan = new TCPRequestChannel(host,port, FIFORequestChannel::CLIENT_SIDE);
 	BoundedBuffer request_buffer(b);
 	HistogramCollection hc;
 
