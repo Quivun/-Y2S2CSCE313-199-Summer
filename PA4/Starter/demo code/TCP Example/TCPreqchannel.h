@@ -38,7 +38,7 @@ private:
             return -1;
         }
         // Here, the socket acts as the master socket and requires a bind call
-        sockfd = socket(serv->ai_family, serv->ai_socktype, serv-> ai_protocol
+        sockfd = socket(serv->ai_family, serv->ai_socktype, serv-> ai_protocol);
         if (sockfd == -1){
             perror("server: socket");
             return -1;
