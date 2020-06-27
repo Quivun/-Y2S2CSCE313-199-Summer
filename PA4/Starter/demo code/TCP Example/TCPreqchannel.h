@@ -28,7 +28,7 @@ private:
         char s[INET6_ADDRSTRLEN];
         int rv;
 
-        memset(&hints, 0, sizeof(hints);
+        memset(&hints, 0, sizeof(hints));
         hints.ai_family = AF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_flags = AI_PASSIVE; // use self ip
@@ -64,7 +64,7 @@ private:
         hints.ai_socktype = SOCK_STREAM;
         int status;
         // getaddrinfo("www.example.com", "3490", &hints, &res);
-        if ((status = getaddrinfo(host.c_str(), port.c_str(), &hints, &res)) !=)
+        if ((status = getaddrinfo(host.c_str(), port.c_str(), &hints, &res)) != 0)
         {
             cerr << "getaddrinfo: " << gai_strerror(status) << endl;
             return -1;

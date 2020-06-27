@@ -209,14 +209,13 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    char * buffer = new char
     srand(time_t(NULL));
     for (int q = 0; q < NUM_PERSONS; q++)
     {
         populate_file_data(q + 1);
     }
 
-    TCPRequestChannel *control_channel = new TCPRequestChannel("", port, TCPRequestChannel::SERVER_SIDE);
+    TCPRequestChannel *control_channel = new TCPRequestChannel("", port, FIFORequestChannel::SERVER_SIDE);
     // 0 means the serverside
     // control_channel = new TCPRequestChannel ("", port, TCPRequestChannel::SERVER_SIDE);
     TCPacceptloop(control_channel);
