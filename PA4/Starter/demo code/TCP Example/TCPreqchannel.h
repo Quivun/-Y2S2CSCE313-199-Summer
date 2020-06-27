@@ -1,3 +1,6 @@
+#ifndef _TCPreqchannel_H_
+#define _TCPreqchannel_H_
+
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -18,8 +21,8 @@ private:
 
     int server(string port)
     {
-        struct addressInfo hints, *serv;
-        struct socketAddressStorate theirAddress;
+        struct addrinfo hints, *serv;
+        struct sockaddr_storage theirAddress;
         socklen_t sin_size;
         char s[INET6_ADDRSTRLEN];
         int rv;
@@ -82,7 +85,7 @@ private:
     }
 
 public:
-    TCPRequestChannel(const string_host, const string_port, int _side)
+    TCPRequestChannel(const string host, const string port, int _side)
     {
         if (_side == 0)
         {
