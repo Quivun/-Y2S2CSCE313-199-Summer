@@ -21,6 +21,7 @@ private:
 
     int server(string port)
     {
+        
         struct addrinfo hints, *serv;
         struct sockaddr_storage theirAddress;
         socklen_t sin_size;
