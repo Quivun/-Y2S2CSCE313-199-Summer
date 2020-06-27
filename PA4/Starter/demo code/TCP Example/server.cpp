@@ -16,6 +16,16 @@ using namespace std;
 vector<vector<string>> all_data;
 int bufCap;
 string port;
+
+int buffercapacity = MAX_MESSAGE;
+char* buffer = NULL; // buffer used by the server, allocated in the main
+
+int nchannels = 0;
+pthread_mutex_t newchannel_lock;
+void handle_process_loop(FIFORequestChannel *_channel);
+char ival;
+vector<string> all_data [NUM_PERSONS];
+
 /*
 // Does not have to be here because the intent doesn't have to be sent to the server we want 
 void process_newchannel_request(TCPRequestChannel *_channel)
@@ -24,7 +34,7 @@ void process_newchannel_request(TCPRequestChannel *_channel)
     string new_channel_name = "data" + to_string(nchannels) + "_";
     char buf[30];
     strcpy(buf, new_channel_name.size() + 1);
-    _channel->cwrite(buf, new_channel_name.size() + 1);
+    _channel>cwrite(buf, new_channel_name.size() + 1);
 
     TCPRequestChannel *data_channel = new TCPRequestChannel(new_channel_name, TCPRequestChannel::SERVER_SIZE);
     thread thread_for_client(handle_process_loop, data_channel);
@@ -33,6 +43,27 @@ void process_newchannel_request(TCPRequestChannel *_channel)
 // We just need to call connect one more time from the client
 */
 
+
+void connection_handler (int client_socket){
+      
+    char buf [1024];
+    while (true){
+        if (recv (client_socket, buf, sizeof (buf), 0) < 0){
+            perror ("server: Receive failure");    
+            exit (0);
+        }
+        int num = *(int *)buf;
+        num *= 2;
+        if (num == 0)
+            break;
+        if (send(client_socket, &num, sizeof (num), 0) == -1){
+            perror("send");
+            break;
+        }
+    }
+    cout << "Closing client socket" << endl;
+	close(client_socket);
+}
 
 void populate_file_data(int person)
 {
