@@ -85,7 +85,7 @@ private:
     }
 
 public:
-    TCPRequestChannel(const string host, const string port, int _side)
+    TCPRequestChannel(const string _host, const string _port, int _side)
     {
         if (_side == 0)
         {

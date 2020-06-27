@@ -123,7 +123,7 @@ void process_unknown_request(TCPRequestChannel *rc)
 }
 int process_request(TCPRequestChannel *rc, char *_request)
 {
-    MESSAGE_TYPE M = *(MESSAGE_TYPE *)_request;
+    MESSAGE_TYPE m = *(MESSAGE_TYPE *)_request;
     if (m == DATA_MSG)
     {
         usleep(rand() % 5000);
