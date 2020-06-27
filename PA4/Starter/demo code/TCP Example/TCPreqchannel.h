@@ -88,13 +88,15 @@ private:
 public:
     TCPRequestChannel(const string _host, const string _port, int _side)
     {
+        int ser;
+        int cli;
         if (_side == 0)
         {
-            server(_port);
+            ser = server(_port);
         }
         else
         {
-            client(_host, _port);
+            cli = client(_host, _port);
         }
     }
     TCPRequestChannel(int _s)
