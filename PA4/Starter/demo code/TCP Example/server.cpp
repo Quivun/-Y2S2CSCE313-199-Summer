@@ -183,7 +183,7 @@ void handle_process_loop(TCPRequestChannel *channel)
     while (true)
     {
         int nbytes = channel->cread(buffer, bufCap);
-        if (nbytes > 0)
+        if (nbytes < 0)
         {
             cerr << "Client Side terminated abnormally" << endl;
             break;
