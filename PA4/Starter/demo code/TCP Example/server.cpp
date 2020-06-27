@@ -30,7 +30,6 @@ void process_newchannel_request(TCPRequestChannel *_channel)
 
 */
 
-
 void populate_file_data(int person)
 {
     // cout << "Populating for person " << person << endl;
@@ -183,7 +182,7 @@ void TCPacceptloop(TCPRequestChannel *master)
             continue;
         }
         TCPRequestChannel *slave_channel = new TCPRequestChannel(slave_socket);
-        thread t (handle_process_loop, slave_channel);
+        thread t(handle_process_loop, slave_channel);
         t.detach();
     }
 }
@@ -210,10 +209,10 @@ int main(int argc, char *argv[])
         populate_file_data(i + 1);
     }
 
-    TCPRequestChannel *control_channel = new TCPRequestChannel("",port, TCPRequestChannel::SERVER_SIDE);
+    TCPRequestChannel *control_channel = new TCPRequestChannel("", port, TCPRequestChannel::SERVER_SIDE);
     // 0 means the serverside
     // control_channel = new TCPRequestChannel ("", port, TCPRequestChannel::SERVER_SIDE);
-    TCPacceptloop (control_channel);
+    TCPacceptloop(control_channel);
 
     //handle_process_loop(control_channel);
     cout << "Server Terminated" << endl;

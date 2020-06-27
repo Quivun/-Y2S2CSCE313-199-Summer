@@ -11,6 +11,9 @@ Histogram.o: Histogram.h Histogram.cpp
 FIFOreqchannel.o: FIFOreqchannel.h FIFOreqchannel.cpp
 	g++ -g -w -std=c++11 -c FIFOreqchannel.cpp
 
+TCPreqchannel.o: TCPreqchannel.h TCPreqchannel.cpp
+	g++ -g -w -std=c++11 -c TCPreqchannel.cpp
+	
 client: client.cpp Histogram.o FIFOreqchannel.o common.o
 	g++ -g -w -std=c++11 -o client client.cpp Histogram.o FIFOreqchannel.o common.o -lpthread -lrt
 
