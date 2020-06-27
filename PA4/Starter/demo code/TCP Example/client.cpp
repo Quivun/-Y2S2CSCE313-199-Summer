@@ -253,7 +253,9 @@ int main(int argc, char *argv[])
 		Histogram *h = new Histogram(10, -2.0, 2.0);
 		hc.add(h);
 	}
-
+	struct timeval start, end;
+	gettimeofday(&start, 0);
+	
 	// Make workers channels
 	cout << "Making Workers channels" << endl;
 	TCPRequestChannel *wchans[w];
@@ -263,8 +265,7 @@ int main(int argc, char *argv[])
 		// wchans[q] = create_new_channel(chan);
 	}
 
-	struct timeval start, end;
-	gettimeofday(&start, 0);
+
 
 	cout << endl
 		 << "Beginning thread creation" << endl;
