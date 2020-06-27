@@ -10,6 +10,7 @@
 #include <string>
 #include <thread>
 #include "TCPreqchannel.h"
+#include "FIFOreqchannel.h"
 using namespace std;
 
 /* 
