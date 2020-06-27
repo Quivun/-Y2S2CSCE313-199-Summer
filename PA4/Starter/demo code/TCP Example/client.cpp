@@ -16,7 +16,7 @@ void timediff(struct timeval &start, struct timeval &end)
 	int usecs = (int)(end.tv_sec * 1e6 + end.tv_usec - start.tv_sec * 1e6 - start.tv_usec) % ((int)1e6);
 	cout << "Took " << secs << " seconds and " << usecs << " micro seconds" << endl;
 }
-
+/*
 TCPRequestChannel *create_new_channel(TCPRequestChannel *mainchan)
 {
 	int bufferSize = 1024;
@@ -27,6 +27,7 @@ TCPRequestChannel *create_new_channel(TCPRequestChannel *mainchan)
 	TCPRequestChannel *newchan = new TCPRequestChannel(name, FIFORequestChannel::CLIENT_SIDE);
 	return newchan;
 }
+*/
 void patient_thread_function(int dataNum, int patientNum, BoundedBuffer *request_buffer)
 {
 	/* What will the patient threads do? */
